@@ -4820,7 +4820,7 @@
       "task_number": 2,
       "major_id": 1,
       "completed": true,
-      "score": 99
+      "score": 100
     },
     {
       "id": "253",
@@ -12834,7 +12834,7 @@
       "task_number": 2,
       "task_title": "חבישת פצע",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 100,
       "id": "3",
       "instructor_id": 2
     },

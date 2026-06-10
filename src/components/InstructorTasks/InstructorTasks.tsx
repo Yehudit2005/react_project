@@ -13,12 +13,13 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
   const [tasks, setTasks] = useState<TeacherTask[]>([]);
   const [searchTask, setSearchTask] = useState('');
   const [searchStudent, setSearchStudent] = useState('');
+  const [filter, setFilter] = useState('pending');
 
   useEffect(() => {
     if (!currentUser) return;
 
     const fetchTasks = async () => {
-      let url = `${allJson}/pending_reviews?instructor_id=${currentUser.id}`;
+      let url = `${allJson}/pending_reviews?instructor_id=${Number(currentUser.id)}`;
       if (searchTask) url += `&task_title_like=${searchTask}`;
       if (searchStudent) url += `&student_name_like=${searchStudent}`;
 
@@ -30,8 +31,16 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
     fetchTasks();
   }, [currentUser, searchTask, searchStudent]);
 
+  const filtered = tasks.filter(t =>
+    filter === 'done' ? t.score !== null : t.score === null
+  );
+
   return (
     <div>
+      <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+        <option value="pending">ממתין לבדיקה</option>
+        <option value="done">נבדק</option>
+      </select>
       <input
         placeholder="חיפוש לפי כותרת משימה..."
         value={searchTask}
@@ -42,10 +51,11 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
         value={searchStudent}
         onChange={(e) => setSearchStudent(e.target.value)}
       />
-      {tasks.map((t) => (
+      {filtered.map((t) => (
         <InstructorTask key={t.id} task={t} />
       ))}
     </div>
   );
-}
+};
+
 export default InstructorTasks;

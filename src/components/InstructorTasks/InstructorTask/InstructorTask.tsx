@@ -31,6 +31,13 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ score: score, completed: true })
     });
+
+    // עדכון ציון גם ב-pending_reviews כדי שיעבור לקטגוריה נבדק
+    await fetch(`${allJson}/pending_reviews/${task.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ score: score })
+    });
   };
 
   return (

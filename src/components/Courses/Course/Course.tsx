@@ -10,9 +10,10 @@ const allJson = 'http://localhost:3001';
 
 interface CourseProps {
   studentTask: StudentTask;
+  status: 'new' | 'pending' | 'done';
 }
 
-const Course: FC<CourseProps> = ({ studentTask }) => {
+const Course: FC<CourseProps> = ({ studentTask, status }) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -59,18 +60,23 @@ const Course: FC<CourseProps> = ({ studentTask }) => {
       {isOpen && (
         <>
           <p>{studentTask.description}</p>
-          <p>בוצע: {studentTask.completed ? 'כן' : 'לא'}</p>
           <p>ציון: {studentTask.score ?? 'אין עדיין'}</p>
-          <form onSubmit={formik.handleSubmit}>
-            <input
-              name="feedback"
-              placeholder="משוב ופירוט איך היתה המשימה (עד 300 תווים)"
-              onChange={formik.handleChange}
-              value={formik.values.feedback}
-            />
-            {formik.errors.feedback && <div>{formik.errors.feedback}</div>}
-            <button type="submit" disabled={!formik.isValid || !formik.dirty}>הגשה</button>
-          </form>
+
+          {status === 'new' && (
+            <form onSubmit={formik.handleSubmit}>
+              <input
+                name="feedback"
+                placeholder="משוב ופירוט איך היתה המשימה (עד 300 תווים)"
+                onChange={formik.handleChange}
+                value={formik.values.feedback}
+              />
+              {formik.errors.feedback && <div>{formik.errors.feedback}</div>}
+              <button type="submit" disabled={!formik.isValid || !formik.dirty}>הגשה</button>
+            </form>
+          )}
+
+          {status === 'pending' && <p>⏳ המשימה ממתינה לבדיקה</p>}
+          {status === 'done' && <p>✅ הושלם</p>}
         </>
       )}
     </div>
