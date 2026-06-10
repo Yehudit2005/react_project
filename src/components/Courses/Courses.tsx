@@ -10,37 +10,28 @@ const Courses = () => {
   const allJson = 'http://localhost:3001';
   const [search, setSearch] = useState('');
 
-  const filtered = assignments.filter((a) =>
-    a.title.includes(search)
-  );
-
   useEffect(() => {
     const fetchTasks = async () => {
-      // מביאים את רשומות המעקב של התלמיד
       const trackingRes = await fetch(`${allJson}/student_assignments?student_id=${currentUser.id}`);
       const trackingData: any[] = await trackingRes.json();
 
-      // מביאים את המשימות לפי המגמה של התלמיד
-      const assignmentsRes = await fetch(`${allJson}/assignments?major_id=${currentUser.major_id}`);
+      const assignmentsUrl = search
+        ? `${allJson}/assignments?major_id=${currentUser.major_id}&title_like=${search}`
+        : `${allJson}/assignments?major_id=${currentUser.major_id}`;
+
+      const assignmentsRes = await fetch(assignmentsUrl);
       const majorAssignments: any[] = await assignmentsRes.json();
 
-      // מחברים בין טראקינג למשימות
       const combined: StudentTask[] = trackingData.map((track) => {
-        const details = majorAssignments.find(
-          (a) => a.task_number === track.task_number
-        );
-        return {
-          ...track,
-          ...details,
-          id: track.id,
-        };
-      });
+        const details = majorAssignments.find((a) => a.task_number === track.task_number);
+        return { ...track, ...details, id: track.id };
+      }).filter((a) => a.title);
 
       setAssignments(combined);
     };
 
     if (currentUser) fetchTasks();
-  }, [currentUser]);
+  }, [currentUser, search]);
 
   return (
     <div>
@@ -49,7 +40,7 @@ const Courses = () => {
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
-      {filtered.map((a) => (
+      {assignments.map((a) => (
         <Course key={a.id} studentTask={a} />
       ))}
     </div>
