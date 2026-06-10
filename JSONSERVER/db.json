@@ -3027,8 +3027,8 @@
       "student_id": 2,
       "task_number": 3,
       "major_id": 1,
-      "completed": true,
-      "score": 99
+      "completed": false,
+      "score": null
     },
     {
       "id": "29",
@@ -13238,15 +13238,169 @@
       "instructor_id": 20
     },
     {
-      "instructor_id": 2,
-      "task_number": 3,
-      "major_name": "סיעוד",
-      "student_id": "2",
-      "task_title": "מתן זריקה תת-עורית",
-      "student_name": "Or",
-      "feedback": "אין לתארררר",
+      "instructor_id": 18,
+      "task_number": 1,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "גבולות ורציפות",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
       "score": null,
-      "id": "ozCr6ol"
+      "id": "VDi0Qf66yCI"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 1,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "גבולות ורציפות",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "_NrbNJx2vL4"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 1,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "גבולות ורציפות",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "oWkpvjVI31s"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 1,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "גבולות ורציפות",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "MG-mVBTbO3I"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 1,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "גבולות ורציפות",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "gR-x9Eo2zsQ"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 8,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "סטטיסטיקה",
+      "student_name": "Ella",
+      "feedback": "נחמד מאד מאד",
+      "score": null,
+      "id": "-tu0tmAoOLs"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 9,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "משוואות דיפרנציאליות",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "csQE2aBH6Zg"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 3,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "אינטגרל מסוים",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "SddwkP6uY0Y"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 14,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "קומבינטוריקה",
+      "student_name": "Ella",
+      "feedback": "נחמד מאד מאד",
+      "score": null,
+      "id": "0fQGm01Lz78"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 14,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "קומבינטוריקה",
+      "student_name": "Ella",
+      "feedback": "נחמד מאד מאד",
+      "score": null,
+      "id": "3pPY4iAYGjk"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 14,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "קומבינטוריקה",
+      "student_name": "Ella",
+      "feedback": "נחמד מאד מאד",
+      "score": null,
+      "id": "JYb3XdGrCwI"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 14,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "קומבינטוריקה",
+      "student_name": "Ella",
+      "feedback": "נחמד מאד מאד",
+      "score": null,
+      "id": "jvSHzUi25Z8"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 14,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "קומבינטוריקה",
+      "student_name": "Ella",
+      "feedback": "נחמד מאד מאד",
+      "score": null,
+      "id": "az8yVLzdhJU"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 14,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "קומבינטוריקה",
+      "student_name": "Ella",
+      "feedback": "נחמד מאד מאד",
+      "score": null,
+      "id": "X2jOo1hZgTE"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 11,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "תורת הגרפים",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "Ua7hYX5P898"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
