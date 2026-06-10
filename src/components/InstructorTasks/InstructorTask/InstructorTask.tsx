@@ -17,9 +17,21 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [score, setScore] = useState<number | null>(null);
   const [scoreError, setScoreError] = useState('');
+  const [taskDetails, setTaskDetails] = useState<any>(null);
+
+  const handleOpen = async () => {
+    if (!isOpen) {
+      // קריאה לשרת — פרטי המשימה לבדיקה
+      const res = await fetch(
+        `${allJson}/pending_reviews/${task.id}`
+      );
+      const data = await res.json();
+      setTaskDetails(data);
+    }
+    setIsOpen(!isOpen);
+  };
 
   const giveMark = async () => {
-    // עדכון ציון ב-student_assignments
     const res = await fetch(
       `${allJson}/student_assignments?student_id=${task.student_id}&task_number=${task.task_number}`
     );
@@ -42,14 +54,14 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
 
   return (
     <div>
-      <h3 onClick={() => setIsOpen(!isOpen)} style={{ cursor: 'pointer' }}>
+      <h3 onClick={handleOpen} style={{ cursor: 'pointer' }}>
         {task.task_title} - {task.student_name}
       </h3>
 
-      {isOpen && (
+      {isOpen && taskDetails && (
         <>
-          <p>משוב תלמיד: {task.feedback}</p>
-          <p>ציון: {task.score ?? 'אין עדיין'}</p>
+          <p>משוב תלמיד: {taskDetails.feedback}</p>
+          <p>ציון: {taskDetails.score ?? 'אין עדיין'}</p>
           <form onSubmit={(e) => { e.preventDefault(); giveMark(); }}>
             <input
               type="number"

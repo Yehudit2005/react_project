@@ -16,11 +16,11 @@ interface CourseProps {
 const Course: FC<CourseProps> = ({ studentTask, status }) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const [isOpen, setIsOpen] = useState(false);
+  const [taskDetails, setTaskDetails] = useState<any>(null);
+  const [trackingDetails, setTrackingDetails] = useState<any>(null);
 
   const formik = useFormik({
-    initialValues: {
-      feedback: '',
-    },
+    initialValues: { feedback: '' },
     validationSchema: yup.object().shape({
       feedback: yup.string()
         .max(300, 'המשוב לא יכול לעלות על 300 תווים')
@@ -31,6 +31,25 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
       await updateTeacher();
     }
   });
+
+  const handleOpen = async () => {
+    if (!isOpen) {
+      // קריאה 1 — פרטי המשימה
+      const assignmentRes = await fetch(
+        `${allJson}/assignments?major_id=${studentTask.major_id}&task_number=${studentTask.task_number}`
+      );
+      const assignmentData = await assignmentRes.json();
+      setTaskDetails(assignmentData[0]);
+
+      // קריאה 2 — סטטוס הסטודנט על המשימה
+      const trackingRes = await fetch(
+        `${allJson}/student_assignments?student_id=${currentUser.id}&task_number=${studentTask.task_number}`
+      );
+      const trackingData = await trackingRes.json();
+      setTrackingDetails(trackingData[0]);
+    }
+    setIsOpen(!isOpen);
+  };
 
   const updateTeacher = async () => {
     const newTask: TeacherTask = {
@@ -53,14 +72,15 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
 
   return (
     <div>
-      <h3 onClick={() => setIsOpen(!isOpen)}>
+      <h3 onClick={handleOpen} style={{ cursor: 'pointer' }}>
         {studentTask.title}
       </h3>
 
-      {isOpen && (
+      {isOpen && taskDetails && trackingDetails && (
         <>
-          <p>{studentTask.description}</p>
-          <p>ציון: {studentTask.score ?? 'אין עדיין'}</p>
+  <p>{taskDetails.description}</p>
+          <p>בוצע: {trackingDetails.completed ? 'כן' : 'לא'}</p>
+          <p>ציון: {trackingDetails.score ?? 'אין עדיין'}</p>
 
           {status === 'new' && (
             <form onSubmit={formik.handleSubmit}>

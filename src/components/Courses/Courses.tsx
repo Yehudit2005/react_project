@@ -17,19 +17,16 @@ const Courses = () => {
       const trackingRes = await fetch(`${allJson}/student_assignments?student_id=${currentUser.id}`);
       const trackingData: any[] = await trackingRes.json();
 
-      const assignmentsRes = await fetch(`${allJson}/assignments?major_id=${currentUser.major_id}`);
-      const majorAssignments: any[] = await assignmentsRes.json();
+ const assignmentsUrl = search
+        ? `${allJson}/assignments?major_id=${currentUser.major_id}&title_like=${search}`
+        : `${allJson}/assignments?major_id=${currentUser.major_id}`;
+
+      const assignmentsRes = await fetch(assignmentsUrl);      const majorAssignments: any[] = await assignmentsRes.json();
 
       const combined: StudentTask[] = trackingData.map((track) => {
-        const details = majorAssignments.find(
-          (a) => a.task_number === track.task_number
-        );
-        return {
-          ...track,
-          ...details,
-          id: track.id,
-        };
-      });
+        const details = majorAssignments.find((a) => a.task_number === track.task_number);
+        return { ...track, ...details, id: track.id };
+      }).filter((a) => a.title);
 
       setAssignments(combined);
 
