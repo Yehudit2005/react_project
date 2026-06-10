@@ -3027,8 +3027,8 @@
       "student_id": 2,
       "task_number": 3,
       "major_id": 1,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 99
     },
     {
       "id": "29",
@@ -13236,6 +13236,17 @@
       "feedback": "לא משהו חבל מאד מאד",
       "score": null,
       "instructor_id": 20
+    },
+    {
+      "instructor_id": 2,
+      "task_number": 3,
+      "major_name": "סיעוד",
+      "student_id": "2",
+      "task_title": "מתן זריקה תת-עורית",
+      "student_name": "Or",
+      "feedback": "אין לתארררר",
+      "score": null,
+      "id": "ozCr6ol"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"
