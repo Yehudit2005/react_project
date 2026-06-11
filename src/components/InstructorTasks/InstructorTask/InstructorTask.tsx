@@ -6,6 +6,7 @@ import { setMessage } from '../../../store/messageSlice';
 
 interface InstructorTaskProps {
   task: TeacherTask;
+  onRefresh: () => void;
 }
 
 const allJson = 'http://localhost:3001';
@@ -15,7 +16,7 @@ const scoreSchema = yup.number()
   .max(100, 'הציון לא יכול לעלות על 100')
   .required('שדה חובה');
 
-const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
+const InstructorTask: FC<InstructorTaskProps> = ({ task, onRefresh }) => {
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [score, setScore] = useState<number | null>(null);
@@ -52,6 +53,7 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
       });
 
       dispatch(setMessage({ text: 'הציון נשלח בהצלחה!', type: 'success' }));
+      onRefresh();
     } catch {
       dispatch(setMessage({ text: 'שגיאה בשליחת הציון', type: 'error' }));
     }

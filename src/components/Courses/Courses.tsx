@@ -14,45 +14,53 @@ const Courses: FC = () => {
   const [filter, setFilter] = useState('new');
   const allJson = 'http://localhost:3001';
 
-  useEffect(() => {
+  const fetchTasks = async () => {
     if (!currentUser) return;
-    const fetchTasks = async () => {
-      const trackingRes = await fetch(`${allJson}/student_assignments?student_id=${currentUser.id}`);
-      const trackingData: any[] = await trackingRes.json();
 
-      if (trackingData.length === 0) {
-        dispatch(setMessage({ text: 'אין משימות מעקב עבורך, פנה למרצה', type: 'info' }));
-        return;
-      }
+    const trackingRes = await fetch(`${allJson}/student_assignments?student_id=${currentUser.id}`);
+    const trackingData: any[] = await trackingRes.json();
 
-      const assignmentsUrl = search
-        ? `${allJson}/assignments?major_id=${currentUser.major_id}&title_like=${search}`
-        : `${allJson}/assignments?major_id=${currentUser.major_id}`;
+    if (trackingData.length === 0) {
+      dispatch(setMessage({ text: 'אין משימות מעקב עבורך, פנה למרצה', type: 'info' }));
+      return;
+    }
 
-      const assignmentsRes = await fetch(assignmentsUrl);
-      const majorAssignments: any[] = await assignmentsRes.json();
+    const assignmentsUrl = search
+      ? `${allJson}/assignments?major_id=${currentUser.major_id}&title_like=${search}`
+      : `${allJson}/assignments?major_id=${currentUser.major_id}`;
 
-      const combined: StudentTask[] = trackingData.map((track) => {
-        const details = majorAssignments.find((a) => a.task_number === track.task_number);
-        return { ...track, ...details, id: track.id };
-      }).filter((a) => a.title);
+    const assignmentsRes = await fetch(assignmentsUrl);
+    const majorAssignments: any[] = await assignmentsRes.json();
 
-      setAssignments(combined);
+    const prRes = await fetch(`${allJson}/pending_reviews?student_id=${currentUser.id}`);
+    const prData = await prRes.json();
+    setPendingReviews(prData);
 
-      const prRes = await fetch(`${allJson}/pending_reviews?student_id=${currentUser.id}`);
-      const prData = await prRes.json();
-      setPendingReviews(prData);
-    };
+    const combined: StudentTask[] = trackingData.map((track) => {
+      const details = majorAssignments.find((a) => a.task_number === track.task_number);
+      const prEntry = prData.find((pr: any) => Number(pr.task_number) === Number(track.task_number));
+      const isPending = prEntry && prEntry.score === null;
+      const isDone = track.score !== null || (prEntry && prEntry.score !== null);
+      const finalScore = track.score ?? prEntry?.score ?? null;
 
+      return {
+        ...details,
+        ...track,
+        id: track.id,
+        score: isDone ? finalScore : null,
+        computedStatus: isDone ? 'done' : isPending ? 'pending' : 'new'
+      };
+    }).filter((a) => a.title);
+
+    setAssignments(combined);
+  };
+
+  useEffect(() => {
     fetchTasks();
-  }, [currentUser]);
+  }, [currentUser, search]);
 
-  if (!currentUser) return null;
-
-  const getStatus = (a: StudentTask): 'new' | 'pending' | 'done' => {
-    if (a.score !== null) return 'done';
-    if (pendingReviews.some(pr => pr.task_number === a.task_number)) return 'pending';
-    return 'new';
+  const getStatus = (a: any): 'new' | 'pending' | 'done' => {
+    return a.computedStatus ?? 'new';
   };
 
   const filtered = assignments
@@ -64,6 +72,8 @@ const Courses: FC = () => {
       dispatch(setMessage({ text: 'אין משימות בסטטוס זה', type: 'info' }));
     }
   }, [filtered.length]);
+
+  if (!currentUser) return null;
 
   return (
     <div>
@@ -78,7 +88,7 @@ const Courses: FC = () => {
         <option value="done">בוצע</option>
       </select>
       {filtered.map((a) => (
-        <Course key={a.id} studentTask={a} status={getStatus(a)} />
+        <Course key={a.id} studentTask={a} status={getStatus(a)} onRefresh={fetchTasks} />
       ))}
     </div>
   );

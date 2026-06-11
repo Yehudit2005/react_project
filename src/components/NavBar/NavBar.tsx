@@ -35,7 +35,7 @@ const NavBar: FC = () => {
         <div className="nav-link" onClick={() => nav('/about')} style={{cursor: 'pointer'}}>About</div>
         
         <div className="nav-link" onClick={handleCoursesClick} style={{cursor: 'pointer'}}>
-          הקורסים שלי
+    המשימות שלי
         </div>
 
         {currentUser ? (

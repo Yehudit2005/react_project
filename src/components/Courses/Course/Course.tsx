@@ -12,9 +12,10 @@ const allJson = 'http://localhost:3001';
 interface CourseProps {
   studentTask: StudentTask;
   status: 'new' | 'pending' | 'done';
+  onRefresh: () => void; // ← חסר
 }
 
-const Course: FC<CourseProps> = ({ studentTask, status }) => {
+const Course: FC<CourseProps> = ({ studentTask, status, onRefresh }) => { // ← חסר
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
@@ -55,9 +56,9 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
     try {
       const newTask: TeacherTask = {
         instructor_id: studentTask.instructor_id,
-        task_number: studentTask.task_number,
+        task_number: Number(studentTask.task_number),
         major_name: studentTask.major_name,
-        student_id: currentUser?.id,
+student_id: Number(currentUser?.id),
         task_title: studentTask.title,
         student_name: currentUser?.first_name,
         feedback: formik.values.feedback,
@@ -71,6 +72,7 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
       });
 
       dispatch(setMessage({ text: 'המשימה נשלחה לבדיקה בהצלחה!', type: 'success' }));
+      onRefresh(); // ← חסר
     } catch {
       dispatch(setMessage({ text: 'שגיאה בשליחת המשימה', type: 'error' }));
     }

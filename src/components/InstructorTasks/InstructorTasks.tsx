@@ -16,20 +16,20 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
   const [searchTask, setSearchTask] = useState('');
   const [searchStudent, setSearchStudent] = useState('');
   const [filter, setFilter] = useState('pending');
+  const [visibleCount, setVisibleCount] = useState(20);
+
+  const fetchTasks = async () => {
+    if (!currentUser) return;
+    let url = `${allJson}/pending_reviews?instructor_id=${Number(currentUser.id)}`;
+    if (searchTask) url += `&task_title_like=${searchTask}`;
+    if (searchStudent) url += `&student_name_like=${searchStudent}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+    setTasks(data);
+  };
 
   useEffect(() => {
-    if (!currentUser) return;
-
-    const fetchTasks = async () => {
-      let url = `${allJson}/pending_reviews?instructor_id=${Number(currentUser.id)}`;
-      if (searchTask) url += `&task_title_like=${searchTask}`;
-      if (searchStudent) url += `&student_name_like=${searchStudent}`;
-
-      const res = await fetch(url);
-      const data = await res.json();
-      setTasks(data);
-    };
-
     fetchTasks();
   }, [currentUser, searchTask, searchStudent]);
 
@@ -38,10 +38,16 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
   );
 
   useEffect(() => {
+    setVisibleCount(20);
+  }, [filter, searchTask, searchStudent]);
+
+  useEffect(() => {
     if (filtered.length === 0 && tasks.length > 0) {
       dispatch(setMessage({ text: 'אין משימות בסטטוס זה', type: 'info' }));
     }
   }, [filtered.length]);
+
+  const visible = filtered.slice(0, visibleCount);
 
   return (
     <div>
@@ -59,9 +65,16 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
         value={searchStudent}
         onChange={(e) => setSearchStudent(e.target.value)}
       />
-      {filtered.map((t) => (
-        <InstructorTask key={t.id} task={t} />
+
+      {visible.map((t) => (
+        <InstructorTask key={t.id} task={t} onRefresh={fetchTasks} />
       ))}
+
+      {visibleCount < filtered.length && (
+        <button onClick={() => setVisibleCount(prev => prev + 20)}>
+          טען עוד ({filtered.length - visibleCount} נותרו)
+        </button>
+      )}
     </div>
   );
 };
