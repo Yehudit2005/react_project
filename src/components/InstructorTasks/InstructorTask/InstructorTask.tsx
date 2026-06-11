@@ -1,6 +1,8 @@
 import { useState, type FC } from 'react';
 import * as yup from 'yup';
 import type { TeacherTask } from '../../../Models/teacherTask.model';
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../../../store/messageSlice';
 
 interface InstructorTaskProps {
   task: TeacherTask;
@@ -14,6 +16,7 @@ const scoreSchema = yup.number()
   .required('שדה חובה');
 
 const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [score, setScore] = useState<number | null>(null);
   const [scoreError, setScoreError] = useState('');
@@ -21,10 +24,7 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
 
   const handleOpen = async () => {
     if (!isOpen) {
-      // קריאה לשרת — פרטי המשימה לבדיקה
-      const res = await fetch(
-        `${allJson}/pending_reviews/${task.id}`
-      );
+      const res = await fetch(`${allJson}/pending_reviews/${task.id}`);
       const data = await res.json();
       setTaskDetails(data);
     }
@@ -32,24 +32,29 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task }) => {
   };
 
   const giveMark = async () => {
-    const res = await fetch(
-      `${allJson}/student_assignments?student_id=${task.student_id}&task_number=${task.task_number}`
-    );
-    const data = await res.json();
-    const studentAssignment = data[0];
+    try {
+      const res = await fetch(
+        `${allJson}/student_assignments?student_id=${task.student_id}&task_number=${task.task_number}`
+      );
+      const data = await res.json();
+      const studentAssignment = data[0];
 
-    await fetch(`${allJson}/student_assignments/${studentAssignment.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ score: score, completed: true })
-    });
+      await fetch(`${allJson}/student_assignments/${studentAssignment.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ score: score, completed: true })
+      });
 
-    // עדכון ציון גם ב-pending_reviews כדי שיעבור לקטגוריה נבדק
-    await fetch(`${allJson}/pending_reviews/${task.id}`, {
-      method: 'PATCH',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ score: score })
-    });
+      await fetch(`${allJson}/pending_reviews/${task.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ score: score })
+      });
+
+      dispatch(setMessage({ text: 'הציון נשלח בהצלחה!', type: 'success' }));
+    } catch {
+      dispatch(setMessage({ text: 'שגיאה בשליחת הציון', type: 'error' }));
+    }
   };
 
   return (

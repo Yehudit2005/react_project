@@ -3,8 +3,9 @@ import type { StudentTask } from '../../../Models/studentTasks.model';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import type { TeacherTask } from '../../../Models/teacherTask.model';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../../store/store';
+import { setMessage } from '../../../store/messageSlice';
 
 const allJson = 'http://localhost:3001';
 
@@ -15,6 +16,7 @@ interface CourseProps {
 
 const Course: FC<CourseProps> = ({ studentTask, status }) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const dispatch = useDispatch();
   const [isOpen, setIsOpen] = useState(false);
   const [taskDetails, setTaskDetails] = useState<any>(null);
   const [trackingDetails, setTrackingDetails] = useState<any>(null);
@@ -34,16 +36,14 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
 
   const handleOpen = async () => {
     if (!isOpen) {
-      // קריאה 1 — פרטי המשימה
       const assignmentRes = await fetch(
         `${allJson}/assignments?major_id=${studentTask.major_id}&task_number=${studentTask.task_number}`
       );
       const assignmentData = await assignmentRes.json();
       setTaskDetails(assignmentData[0]);
 
-      // קריאה 2 — סטטוס הסטודנט על המשימה
       const trackingRes = await fetch(
-        `${allJson}/student_assignments?student_id=${currentUser.id}&task_number=${studentTask.task_number}`
+        `${allJson}/student_assignments?student_id=${currentUser?.id}&task_number=${studentTask.task_number}`
       );
       const trackingData = await trackingRes.json();
       setTrackingDetails(trackingData[0]);
@@ -52,22 +52,28 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
   };
 
   const updateTeacher = async () => {
-    const newTask: TeacherTask = {
-      instructor_id: studentTask.instructor_id,
-      task_number: studentTask.task_number,
-      major_name: studentTask.major_name,
-      student_id: currentUser.id,
-      task_title: studentTask.title,
-      student_name: currentUser.first_name,
-      feedback: formik.values.feedback,
-      score: null
-    };
+    try {
+      const newTask: TeacherTask = {
+        instructor_id: studentTask.instructor_id,
+        task_number: studentTask.task_number,
+        major_name: studentTask.major_name,
+        student_id: currentUser?.id,
+        task_title: studentTask.title,
+        student_name: currentUser?.first_name,
+        feedback: formik.values.feedback,
+        score: null
+      };
 
-    await fetch(`${allJson}/pending_reviews`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newTask)
-    });
+      await fetch(`${allJson}/pending_reviews`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newTask)
+      });
+
+      dispatch(setMessage({ text: 'המשימה נשלחה לבדיקה בהצלחה!', type: 'success' }));
+    } catch {
+      dispatch(setMessage({ text: 'שגיאה בשליחת המשימה', type: 'error' }));
+    }
   };
 
   return (
@@ -78,7 +84,7 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
 
       {isOpen && taskDetails && trackingDetails && (
         <>
-  <p>{taskDetails.description}</p>
+          <p>{taskDetails.description}</p>
           <p>בוצע: {trackingDetails.completed ? 'כן' : 'לא'}</p>
           <p>ציון: {trackingDetails.score ?? 'אין עדיין'}</p>
 

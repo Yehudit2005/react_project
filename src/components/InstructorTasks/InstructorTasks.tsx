@@ -1,15 +1,17 @@
 import { useEffect, useState, type FC } from 'react';
 import './InstructorTasks.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
 import type { TeacherTask } from '../../Models/teacherTask.model';
 import InstructorTask from '../InstructorTasks/InstructorTask/InstructorTask';
+import { setMessage } from '../../store/messageSlice';
 
 interface InstructorTasksProps { }
 const allJson = 'http://localhost:3001';
 
 const InstructorTasks: FC<InstructorTasksProps> = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const dispatch = useDispatch();
   const [tasks, setTasks] = useState<TeacherTask[]>([]);
   const [searchTask, setSearchTask] = useState('');
   const [searchStudent, setSearchStudent] = useState('');
@@ -34,6 +36,12 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
   const filtered = tasks.filter(t =>
     filter === 'done' ? t.score !== null : t.score === null
   );
+
+  useEffect(() => {
+    if (filtered.length === 0 && tasks.length > 0) {
+      dispatch(setMessage({ text: 'אין משימות בסטטוס זה', type: 'info' }));
+    }
+  }, [filtered.length]);
 
   return (
     <div>

@@ -985,6 +985,63 @@
       "study_year": "שנייה",
       "family_status": "נשוי/אה",
       "password": "2av#wetv"
+    },
+    {
+      "id": "gFAb-G-PP2g",
+      "user_type_id": 1,
+      "first_name": "רחלי",
+      "last_name": "ורנר",
+      "email": "ella.har@student.college.ac.il",
+      "password": "7%hYaP5p",
+      "address": {
+        "city": "ירושלים",
+        "street": "הרב מאיר פניז'ל",
+        "number": 5
+      },
+      "phone": "0539619474",
+      "age": 20,
+      "major_id": 3,
+      "major_name": "פסיכולוגיה",
+      "study_year": "ראשונה",
+      "family_status": "רווק/ה"
+    },
+    {
+      "id": "CqkBVP_PI10",
+      "user_type_id": 1,
+      "first_name": "רחלי",
+      "last_name": "ורנר",
+      "email": "racheli.verner@student.college.ac.il",
+      "password": "​7%hYaoop",
+      "address": {
+        "city": "jerusalem",
+        "street": "הרב מאיר פניז'ל",
+        "number": 5
+      },
+      "phone": "0525221111",
+      "age": 19,
+      "major_id": 1,
+      "major_name": "סיעוד",
+      "study_year": "ראשונה",
+      "family_status": "נשוי/אה"
+    },
+    {
+      "id": "DZAvXbC8rdc",
+      "user_type_id": 1,
+      "first_name": "רחלי",
+      "last_name": "ורנר",
+      "email": "rachel.vernr@student.college.ac.il",
+      "password": "7%hYaoop!",
+      "address": {
+        "city": "jerusalem",
+        "street": "הרב מאיר פניז'ל",
+        "number": 5
+      },
+      "phone": "0526666666",
+      "age": 22,
+      "major_id": 1,
+      "major_name": "סיעוד",
+      "study_year": "רביעית",
+      "family_status": "נשוי/אה"
     }
   ],
   "instructors": [
@@ -4043,8 +4100,8 @@
       "student_id": 7,
       "task_number": 5,
       "major_id": 5,
-      "completed": false,
-      "score": 100
+      "completed": true,
+      "score": 55
     },
     {
       "id": "156",
@@ -9499,8 +9556,8 @@
       "student_id": 34,
       "task_number": 12,
       "major_id": 5,
-      "completed": false,
-      "score": 10
+      "completed": true,
+      "score": 30
     },
     {
       "id": "838",
@@ -13134,7 +13191,7 @@
       "task_number": 5,
       "task_title": "מטריצות",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 55,
       "id": "33",
       "instructor_id": 17
     },
@@ -13144,7 +13201,7 @@
       "task_number": 12,
       "task_title": "אלגברה בוליאנית",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 30,
       "id": "34",
       "instructor_id": 17
     },
@@ -13401,6 +13458,17 @@
       "feedback": "לא משהו חבל",
       "score": null,
       "id": "Ua7hYX5P898"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 3,
+      "major_name": "מתמטיקה",
+      "student_id": "34",
+      "task_title": "אינטגרל מסוים",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "SjQ6r8mIIOI"
     }
   ],
   "$schema": "./node_modules/json-server/schema.json"

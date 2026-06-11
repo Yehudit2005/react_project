@@ -1,11 +1,13 @@
-import { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useEffect, useState, type FC } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
 import type { StudentTask } from '../../Models/studentTasks.model';
 import Course from './Course/Course';
+import { setMessage } from '../../store/messageSlice';
 
-const Courses = () => {
+const Courses: FC = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const dispatch = useDispatch();
   const [assignments, setAssignments] = useState<StudentTask[]>([]);
   const [pendingReviews, setPendingReviews] = useState<any[]>([]);
   const [search, setSearch] = useState('');
@@ -13,15 +15,22 @@ const Courses = () => {
   const allJson = 'http://localhost:3001';
 
   useEffect(() => {
+    if (!currentUser) return;
     const fetchTasks = async () => {
       const trackingRes = await fetch(`${allJson}/student_assignments?student_id=${currentUser.id}`);
       const trackingData: any[] = await trackingRes.json();
 
- const assignmentsUrl = search
+      if (trackingData.length === 0) {
+        dispatch(setMessage({ text: 'אין משימות מעקב עבורך, פנה למרצה', type: 'info' }));
+        return;
+      }
+
+      const assignmentsUrl = search
         ? `${allJson}/assignments?major_id=${currentUser.major_id}&title_like=${search}`
         : `${allJson}/assignments?major_id=${currentUser.major_id}`;
 
-      const assignmentsRes = await fetch(assignmentsUrl);      const majorAssignments: any[] = await assignmentsRes.json();
+      const assignmentsRes = await fetch(assignmentsUrl);
+      const majorAssignments: any[] = await assignmentsRes.json();
 
       const combined: StudentTask[] = trackingData.map((track) => {
         const details = majorAssignments.find((a) => a.task_number === track.task_number);
@@ -35,8 +44,10 @@ const Courses = () => {
       setPendingReviews(prData);
     };
 
-    if (currentUser) fetchTasks();
+    fetchTasks();
   }, [currentUser]);
+
+  if (!currentUser) return null;
 
   const getStatus = (a: StudentTask): 'new' | 'pending' | 'done' => {
     if (a.score !== null) return 'done';
@@ -47,6 +58,12 @@ const Courses = () => {
   const filtered = assignments
     .filter((a) => a.title.includes(search))
     .filter((a) => getStatus(a) === filter);
+
+  useEffect(() => {
+    if (filtered.length === 0 && assignments.length > 0) {
+      dispatch(setMessage({ text: 'אין משימות בסטטוס זה', type: 'info' }));
+    }
+  }, [filtered.length]);
 
   return (
     <div>

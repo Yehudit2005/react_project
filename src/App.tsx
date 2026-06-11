@@ -48,8 +48,24 @@ import NewTask from './components/NewTask/NewTask';
 import Register from './components/Register/Register';
 import InstructorTasks from './components/InstructorTasks/InstructorTasks';
 import About from './components/About/About'; // וודא שהקובץ קיים
-
+import Toast from './components/Toast/Toast';
+import { useSelector, useDispatch } from 'react-redux';
+import { Navigate } from 'react-router';
+import type { RootState } from './store/store';
+import { setMessage } from './store/messageSlice';
 function App() {
+    const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const dispatch = useDispatch();
+
+const protect = (element: any) => {
+  if (!currentUser) {
+    setTimeout(() => {
+      dispatch(setMessage({ text: 'עליך להתחבר תחילה', type: 'warning' }));
+    }, 0);
+    return <Navigate to="/logIn" />;
+  }
+  return element;
+};
   return (
     <div dir="rtl" className="container-fluid p-0">
       <NavBar /> 
@@ -70,6 +86,7 @@ function App() {
           <Route path="instructorTasks" element={<InstructorTasks />} />
         </Route>
       </Routes>
+            <Toast />
     </div>
   );
 }
