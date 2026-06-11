@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { useDispatch } from 'react-redux';
-import { setUser } from '../../store/userSlice';
+import { setUser, setAdmin } from '../../store/userSlice';
 
 interface LogInProps { }
 
@@ -12,7 +12,7 @@ const LogIn: FC<LogInProps> = () => {
   const navigate = useNavigate();
   const allJson = 'http://localhost:3001';
   const dispatch = useDispatch();
-  const [isTeacher, setIsTeacher] = useState(true)
+  const [isTeacher, setIsTeacher] = useState(true);
 
   const formik = useFormik({
     initialValues: { email: '', password: '' },
@@ -26,12 +26,27 @@ const LogIn: FC<LogInProps> = () => {
         .required('שדה חובה'),
     }),
     onSubmit: async (values) => {
+
+      const adminsApi = await fetch(`${allJson}/admins`);
+      const admins = await adminsApi.json();
+      const foundAdmin = admins.find((a: any) => a.email === values.email);
+
+      if (foundAdmin) {
+        if (foundAdmin.password === values.password) {
+          dispatch(setAdmin(true));
+          navigate('/admin');
+        } else {
+          formik.setFieldError('password', 'סיסמא שגויה, נסה שוב');
+        }
+        return;
+      }
+
       const studentsApi = await fetch(`${allJson}/students`);
       const students = await studentsApi.json();
       const foundStudent = students.find((s: any) => s.email === values.email);
 
       if (foundStudent) {
-        setIsTeacher(false)
+        setIsTeacher(false);
         if (foundStudent.password === values.password) {
           dispatch(setUser(foundStudent));
           navigate('/home/courses');
@@ -46,7 +61,7 @@ const LogIn: FC<LogInProps> = () => {
       const foundInstructor = instructors.find((i: any) => i.email === values.email);
 
       if (foundInstructor) {
-        setIsTeacher(true)
+        setIsTeacher(true);
         if (foundInstructor.password === values.password) {
           dispatch(setUser(foundInstructor));
           navigate('/home/instructorTasks');
@@ -55,9 +70,9 @@ const LogIn: FC<LogInProps> = () => {
         }
         return;
       }
+
       navigate('/register');
     }
-
   });
 
   return (

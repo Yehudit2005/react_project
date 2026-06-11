@@ -13689,7 +13689,25 @@
       "feedback": "היה ממש קשה",
       "score": null,
       "id": "ayVfkTqZ7ok"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 4,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "סדרות וטורים",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "NEcT68KFy6c"
     }
-  ],
+  ],"admins": [
+  {
+    "id": "1",
+    "email": "admin@college.ac.il",
+    "password": "Admin1!23"
+  }
+],
   "$schema": "./node_modules/json-server/schema.json"
+
 }
