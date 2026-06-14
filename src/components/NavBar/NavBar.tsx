@@ -16,13 +16,17 @@ const isAdmin = useSelector((state: RootState) => state.user.isAdmin);
     nav('/');
   };
 
-  const handleCoursesClick = () => {
-    if (currentUser) {
-      nav(currentUser.user_type_id === 2 ? '/instructorTasks' : '/courses');
+const handleCoursesClick = () => {
+  if (currentUser) {
+    if (isAdmin) {
+      nav('/adminTasks');
     } else {
-      nav('/logIn');
+      nav(currentUser.user_type_id === 2 ? '/instructorTasks' : '/courses');
     }
-  };
+  } else {
+    nav('/logIn');
+  }
+};
 
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-light px-4 shadow-sm">
