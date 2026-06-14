@@ -34,7 +34,9 @@ const LogIn: FC<LogInProps> = () => {
       if (foundAdmin) {
         if (foundAdmin.password === values.password) {
           dispatch(setAdmin(true));
-          navigate('/admin');
+            dispatch(setUser(foundAdmin)); // ← הוסף
+  navigate('/'); 
+          // navigate('/admin');
         } else {
           formik.setFieldError('password', 'סיסמא שגויה, נסה שוב');
         }
@@ -48,6 +50,7 @@ const LogIn: FC<LogInProps> = () => {
       if (foundStudent) {
         setIsTeacher(false);
         if (foundStudent.password === values.password) {
+          dispatch(setAdmin(false));
           dispatch(setUser(foundStudent));
           navigate('/home/courses');
         } else {
