@@ -2531,6 +2531,24 @@
       "title": "תורת הקבוצות",
       "description": "עליך לכתוב הסבר על אקסיומות ZFC ומשמעות אקסיומת הבחירה.",
       "id": "525"
+    },
+    {
+      "id": "TDBiWF82sgE",
+      "task_number": 26,
+      "major_id": 5,
+      "major_name": "מתמטיקה",
+      "instructor_id": 17,
+      "title": "טריגונומטריה",
+      "description": "עליך לבצע את התרגילים שקיבלנו היום בשיער 6"
+    },
+    {
+      "id": "e0pfebQrcak",
+      "task_number": 27,
+      "major_id": 5,
+      "major_name": "מתמטיקה",
+      "instructor_id": 19,
+      "title": "מדידת נפח",
+      "description": "עליך למדוד נפחים שונים שאתה רואה בקרבתך"
     }
   ],
   "tracking": [
@@ -11697,8 +11715,8 @@
       "student_id": 45,
       "task_number": 8,
       "major_id": 3,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 98
     },
     {
       "id": "1109",
@@ -13054,7 +13072,7 @@
       "task_number": 8,
       "task_title": "מוטיבציה",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 98,
       "id": "22",
       "instructor_id": 11
     },

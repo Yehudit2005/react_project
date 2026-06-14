@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
 import "./NewTask.scss";
+import { useDispatch } from 'react-redux';
+import { setMessage } from '../../store/messageSlice';
 
 interface NewTaskProps { }
 
@@ -17,7 +19,7 @@ const majorNames: Record<number, string> = {
 const NewTask: FC<NewTaskProps> = () => {
   const navigate = useNavigate();
   const allJson = 'http://localhost:3001';
-
+const dispatch = useDispatch();
   const formik = useFormik({
     initialValues: {
       title: '',
@@ -59,7 +61,9 @@ const NewTask: FC<NewTaskProps> = () => {
         body: JSON.stringify(newTask),
       });
 
-      navigate('/home');
+      // navigate('/home');
+      dispatch(setMessage({ text: 'המשימה נוספה בהצלחה', type: 'success' }));
+formik.resetForm();
     }
   });
 
