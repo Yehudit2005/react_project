@@ -1435,24 +1435,6 @@
   ],
   "assignments": [
     {
-      "task_number": 1,
-      "major_id": 1,
-      "major_name": "סיעוד",
-      "instructor_id": 1,
-      "title": "מדידת לחץ דם",
-      "description": "עליך לכתוב דוח מלא על מדידת לחץ הדם של המטופל, כולל ערכים, פרשנות קלינית והמלצות המשך.",
-      "id": "101"
-    },
-    {
-      "task_number": 2,
-      "major_id": 1,
-      "major_name": "סיעוד",
-      "instructor_id": 2,
-      "title": "חבישת פצע",
-      "description": "עליך לכתוב תיאור מפורט של תהליך חבישת פצע סטרילי, שלב אחר שלב.",
-      "id": "102"
-    },
-    {
       "task_number": 3,
       "major_id": 1,
       "major_name": "סיעוד",
@@ -1883,15 +1865,6 @@
       "title": "Docker",
       "description": "עליך לכתוב כיצד מגדירים Dockerfile בסיסי לאפליקציית Python ומריצים אותה.",
       "id": "225"
-    },
-    {
-      "task_number": 1,
-      "major_id": 3,
-      "major_name": "פסיכולוגיה",
-      "instructor_id": 12,
-      "title": "תיאוריות אישיות",
-      "description": "עליך לכתוב השוואה בין תיאוריית האישיות של פרויד לזו של יונג.",
-      "id": "301"
     },
     {
       "task_number": 2,
@@ -13701,13 +13674,13 @@
       "score": null,
       "id": "NEcT68KFy6c"
     }
-  ],"admins": [
-  {
-    "id": "1",
-    "email": "admin@college.ac.il",
-    "password": "Admin1!23"
-  }
-],
+  ],
+  "admins": [
+    {
+      "id": "1",
+      "email": "admin@college.ac.il",
+      "password": "Admin1!23"
+    }
+  ],
   "$schema": "./node_modules/json-server/schema.json"
-
 }
