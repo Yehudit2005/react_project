@@ -2,7 +2,8 @@ import { useEffect, useState, type FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../../store/messageSlice';
 import type { TeacherTask } from '../../Models/teacherTask.model';
-import type { Instructor } from '../../Models/user.model';
+// import type { TeacherTask } from '../../Models/teacherTask.model';
+import type {User} from '../../Models/user.model'
 import './AdminTasks.scss';
 
 interface AdminTasksProps {}
@@ -11,7 +12,7 @@ const AdminTasks: FC<AdminTasksProps> = () => {
   const allJson = 'http://localhost:3001';
   const dispatch = useDispatch();
   const [assignments, setAssignments] = useState<TeacherTask[]>([]);
-  const [instructors, setInstructors] = useState<Instructor[]>([]);
+  const [instructors, setInstructors] = useState<User[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {

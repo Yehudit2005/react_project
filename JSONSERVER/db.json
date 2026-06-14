@@ -1435,15 +1435,6 @@
   ],
   "assignments": [
     {
-      "task_number": 3,
-      "major_id": 1,
-      "major_name": "סיעוד",
-      "instructor_id": 2,
-      "title": "מתן זריקה תת-עורית",
-      "description": "עליך לכתוב הסבר על טכניקת מתן זריקה תת-עורית, כולל אתרי ההזרקה המומלצים.",
-      "id": "103"
-    },
-    {
       "task_number": 4,
       "major_id": 1,
       "major_name": "סיעוד",
