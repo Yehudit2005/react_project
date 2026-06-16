@@ -35,6 +35,7 @@ export interface Instructor {
   major_id: number;
   major_name: string;
   courses: string[];
-  family_status?: string;  // ← הוסיפי
+  family_status?: string;  
 }
+
 export type User = Student | Instructor;

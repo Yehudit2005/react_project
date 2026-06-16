@@ -9,6 +9,7 @@ const NavBar: FC = () => {
   const nav = useNavigate();
   const dispatch = useDispatch();
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const isAdmin = useSelector((state: RootState) => state.user.isAdmin);
 
   const handleLogout = () => {
     dispatch(setUser(null));
@@ -17,40 +18,38 @@ const NavBar: FC = () => {
 
   const handleCoursesClick = () => {
     if (currentUser) {
-      // ניווט לנתיבים הראשיים שהגדרנו ב-App.tsx
-      nav(currentUser.user_type_id === 2 ? '/instructorTasks' : '/courses');
+      if (isAdmin) {
+        nav('/adminTasks');
+      } else {
+        nav(currentUser.user_type_id === 2 ? '/instructorTasks' : '/courses');
+      }
     } else {
       nav('/logIn');
     }
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-light px-4 shadow-sm">
-      <div className="navbar-brand fw-bold" onClick={() => nav('/')} style={{cursor: 'pointer'}}>
+    <nav>
+      <div className="brand" onClick={() => nav('/')}>
         🎓 האקדמיה
       </div>
-      
-      <div className="navbar-nav ms-auto gap-3">
-        <div className="nav-link" onClick={() => nav('/')} style={{cursor: 'pointer'}}>בית</div>
-        <div className="nav-link" onClick={() => nav('/about')} style={{cursor: 'pointer'}}>About</div>
-        
-        <div className="nav-link" onClick={handleCoursesClick} style={{cursor: 'pointer'}}>
-          הקורסים שלי
-        </div>
 
+      <div className="nav-items">
+        <div className="nav-item" onClick={() => nav('/')}>בית</div>
+        <div className="nav-item" onClick={() => nav('/about')}>About</div>
+        <div className="nav-item" onClick={handleCoursesClick}>המשימות שלי</div>
+        {isAdmin && (
+          <div className="nav-item" onClick={() => nav('/newTask')}>הוספת משימה</div>
+        )}
         {currentUser ? (
           <>
-            <div className="nav-link text-primary fw-bold" onClick={() => nav('/home/profile')} style={{cursor: 'pointer'}}>
-              👤 {currentUser.first_name}
+            <div className="nav-item-primary" onClick={() => nav('/home/profile')}>
+              👤 {isAdmin ? 'מנהל' : currentUser.first_name}
             </div>
-            <div className="nav-link text-danger" onClick={handleLogout} style={{cursor: 'pointer'}}>
-              יציאה
-            </div>
+            <div className="nav-item-danger" onClick={handleLogout}>יציאה</div>
           </>
         ) : (
-          <div className="nav-link" onClick={() => nav('/logIn')} style={{cursor: 'pointer'}}>
-            כניסה
-          </div>
+          <div className="nav-item" onClick={() => nav('/logIn')}>כניסה</div>
         )}
       </div>
     </nav>
