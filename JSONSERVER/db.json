@@ -2470,7 +2470,7 @@
       "description": "עליך למדוד נפחים שונים שאתה רואה בקרבתך"
     },
     {
-      "id": 528,
+      "id": "528",
       "task_number": 28,
       "major_id": 5,
       "major_name": "מתמטיקה",
@@ -4219,8 +4219,8 @@
       "student_id": 8,
       "task_number": 5,
       "major_id": 4,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 100
     },
     {
       "id": "181",
@@ -9235,8 +9235,8 @@
       "student_id": 33,
       "task_number": 7,
       "major_id": 4,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 100
     },
     {
       "id": "808",
@@ -9419,8 +9419,8 @@
       "student_id": 34,
       "task_number": 5,
       "major_id": 5,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 100
     },
     {
       "id": "831",
@@ -13050,7 +13050,7 @@
       "task_number": 5,
       "task_title": "תנודות והרמוניה",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 100,
       "id": "27",
       "instructor_id": 14
     },
@@ -13060,7 +13060,7 @@
       "task_number": 7,
       "task_title": "תרמודינמיקה",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 100,
       "id": "28",
       "instructor_id": 14
     },
@@ -13672,7 +13672,7 @@
       "task_title": "מטריצות",
       "student_name": "Ella",
       "feedback": "לא משהו חבל",
-      "score": null,
+      "score": 100,
       "id": "RfOWUaP"
     },
     {

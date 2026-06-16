@@ -3,7 +3,6 @@ import { useCallback, useEffect, useRef, useState } from 'react';
 interface UndoState {
   message: string;
   onUndo: () => Promise<void> | void;
-  // ✅ תיקון: onCommit נקרא רק אחרי שה-5 שניות עברו ללא ביטול
   onCommit: () => Promise<void> | void;
 }
 
@@ -16,7 +15,7 @@ interface UseUndoActionReturn {
     onCommit: () => Promise<void> | void
   ) => void;
   handleUndo: () => Promise<void>;
-  dismissUndo: () => void;
+  dismissUndo: () => Promise<void>;
 }
 
 const UNDO_TIMEOUT_MS = 5000;
@@ -24,6 +23,7 @@ const UNDO_TIMEOUT_MS = 5000;
 export const useUndoAction = (): UseUndoActionReturn => {
   const [undoState, setUndoState] = useState<UndoState | null>(null);
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isCommittingRef = useRef(false);
 
   const clearTimer = () => {
     if (timerRef.current) {
@@ -32,50 +32,68 @@ export const useUndoAction = (): UseUndoActionReturn => {
     }
   };
 
-  const dismissUndo = useCallback(() => {
-    clearTimer();
-    setUndoState(null);
-  }, []);
+  const commitNow = useCallback(async () => {
+    if (!undoState || isCommittingRef.current) return;
 
-  // Ctrl+Z support
+    isCommittingRef.current = true;
+    clearTimer();
+
+    await undoState.onCommit();
+
+    setUndoState(null);
+    isCommittingRef.current = false;
+  }, [undoState]);
+
+  const dismissUndo = useCallback(async () => {
+    await commitNow();
+  }, [commitNow]);
+
+  const handleUndo = useCallback(async () => {
+    if (!undoState || isCommittingRef.current) return;
+
+    clearTimer();
+    await undoState.onUndo();
+    setUndoState(null);
+  }, [undoState]);
+
   useEffect(() => {
     if (!undoState) return;
+
     const handleKeyDown = (e: KeyboardEvent) => {
       if ((e.ctrlKey || e.metaKey) && e.key === 'z') {
         e.preventDefault();
         handleUndo();
       }
     };
+
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [undoState]);
+  }, [undoState, handleUndo]);
 
   const triggerWithUndo = useCallback(
     (
       message: string,
       onUndo: () => Promise<void> | void,
-      // ✅ תיקון: onCommit = מה שקורה ב-DB רק אחרי שהזמן עבר
       onCommit: () => Promise<void> | void
     ) => {
       clearTimer();
-      setUndoState({ message, onUndo, onCommit });
+      isCommittingRef.current = false;
+
+      const newState = { message, onUndo, onCommit };
+      setUndoState(newState);
 
       timerRef.current = setTimeout(async () => {
-        // ✅ תיקון: רק כאן — אחרי 5 שניות — מבצעים את הפעולה ב-DB
-        await onCommit();
+        if (isCommittingRef.current) return;
+
+        isCommittingRef.current = true;
+        await newState.onCommit();
+
         setUndoState(null);
+        isCommittingRef.current = false;
       }, UNDO_TIMEOUT_MS);
     },
     []
   );
-
-  const handleUndo = useCallback(async () => {
-    if (!undoState) return;
-    // ✅ תיקון: ביטול הטיימר כדי ש-onCommit לא יקרה
-    clearTimer();
-    await undoState.onUndo();
-    setUndoState(null);
-  }, [undoState]);
 
   return {
     showUndo: !!undoState,
