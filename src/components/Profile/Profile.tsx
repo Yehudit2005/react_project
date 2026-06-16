@@ -6,13 +6,13 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import { setMessage } from '../../store/messageSlice';
 import { useUndoAction } from '../../Hooks/useUndoAction';
-
+import { useState } from 'react';
 const allJson = 'http://localhost:3001';
 
 const Profile: FC = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
-
+const [showPassword, setShowPassword] = useState(false);
   const {
     triggerWithUndo,
     showUndo,
@@ -117,13 +117,23 @@ const Profile: FC = () => {
       </h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          name="password"
-          type="password"
-          placeholder="סיסמא חדשה"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-        />
+ <div className="password-field">
+  <input
+    name="password"
+    type={showPassword ? 'text' : 'password'}
+    placeholder="סיסמא חדשה"
+    onChange={formik.handleChange}
+    value={formik.values.password}
+  />
+
+  <button
+    type="button"
+    className="toggle-password"
+    onClick={() => setShowPassword(prev => !prev)}
+  >
+    {showPassword ? '🙈' : '👁️'}
+  </button>
+</div>
 
         {isStudent && (
           <input
