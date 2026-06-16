@@ -88,7 +88,7 @@ const Courses: FC = () => {
         <option value="done">בוצע</option>
       </select>
       {filtered.map((a) => (
-        <Course key={a.id} studentTask={a} status={getStatus(a)} onRefresh={fetchTasks} />
+        <Course key={a.id} studentTask={a} status={getStatus(a)}  />
       ))}
     </div>
   );

@@ -3050,8 +3050,8 @@
       "student_id": 2,
       "task_number": 1,
       "major_id": 1,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 100
     },
     {
       "id": "27",
@@ -3890,8 +3890,8 @@
       "student_id": 6,
       "task_number": 6,
       "major_id": 1,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 99
     },
     {
       "id": "132",
@@ -8498,8 +8498,8 @@
       "student_id": 29,
       "task_number": 7,
       "major_id": 1,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 55
     },
     {
       "id": "708",
@@ -12853,7 +12853,7 @@
       "task_number": 1,
       "task_title": "מדידת לחץ דם",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 100,
       "id": "1",
       "instructor_id": 1
     },
@@ -12863,7 +12863,7 @@
       "task_number": 6,
       "task_title": "מתן תרופות דרך הפה",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 99,
       "id": "2",
       "instructor_id": 1
     },
@@ -12883,7 +12883,7 @@
       "task_number": 7,
       "task_title": "ניטור סימנים חיוניים",
       "feedback": "משוב לדוגמה על המשימה",
-      "score": null,
+      "score": 55,
       "id": "4",
       "instructor_id": 2
     },
@@ -13682,6 +13682,17 @@
       "feedback": "לא משהו חבל",
       "score": null,
       "id": "NEcT68KFy6c"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 4,
+      "major_name": "מתמטיקה",
+      "student_id": 1,
+      "task_title": "סדרות וטורים",
+      "student_name": "Yael",
+      "feedback": "קשה בטירוףףף",
+      "score": null,
+      "id": "MFxmzlg"
     }
   ],
   "admins": [
