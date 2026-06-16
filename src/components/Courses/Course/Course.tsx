@@ -11,12 +11,22 @@ import './Course.scss';
 
 const allJson = 'http://localhost:3001';
 
+// interface CourseProps {
+//   studentTask: StudentTask;
+//   status: 'new' | 'pending' | 'done';
+// }
 interface CourseProps {
   studentTask: StudentTask;
   status: 'new' | 'pending' | 'done';
+  refreshTasks: () => Promise<void>;
 }
 
-const Course: FC<CourseProps> = ({ studentTask, status }) => {
+// const Course: FC<CourseProps> = ({ studentTask, status }) => {
+const Course: FC<CourseProps> = ({
+  studentTask,
+  status,
+  refreshTasks
+}) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
 
@@ -106,6 +116,7 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newTask)
         });
+        await refreshTasks();
       }
     );
   };

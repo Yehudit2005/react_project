@@ -3339,8 +3339,8 @@
       "student_id": 3,
       "task_number": 20,
       "major_id": 5,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 100
     },
     {
       "id": "71",
@@ -9499,8 +9499,8 @@
       "student_id": 34,
       "task_number": 15,
       "major_id": 5,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 100
     },
     {
       "id": "841",
@@ -13562,7 +13562,7 @@
       "task_title": "אופטימיזציה",
       "student_name": "Noam",
       "feedback": "נחמד מאד מאד",
-      "score": null,
+      "score": 100,
       "id": "ztqdnsw349g"
     },
     {
@@ -13652,6 +13652,105 @@
       "feedback": "עשיתי וממש מרגישה שהשתפרתי",
       "score": null,
       "id": "NmrYE5V"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 6,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "מרחבים וקטוריים",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "-gWInpa"
+    },
+    {
+      "instructor_id": 17,
+      "task_number": 5,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "מטריצות",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "RfOWUaP"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 7,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "הסתברות",
+      "student_name": "Ella",
+      "feedback": "עשיתי וממש מרגישה שהשתפרתי",
+      "score": null,
+      "id": "Yxe8Yg6"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 7,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "הסתברות",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "tGBBOJ2"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 13,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "חשבון אינפיניטסימלי רב-משתנים",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "EyA1KAE"
+    },
+    {
+      "instructor_id": 17,
+      "task_number": 15,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "מספרים מרוכבים",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": 100,
+      "id": "DhQdxvQ"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 22,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "אלגברה לינארית",
+      "student_name": "Ella",
+      "feedback": "היה ממש קשה",
+      "score": null,
+      "id": "dUNU--R"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 10,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "טופולוגיה",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "753NvDU"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 17,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "לוגיקה מתמטית",
+      "student_name": "Ella",
+      "feedback": "לא משהו חבל",
+      "score": null,
+      "id": "8WPFJ6R"
     }
   ],
   "admins": [
