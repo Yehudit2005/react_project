@@ -4,6 +4,7 @@ import type { RootState } from '../../store/store';
 import type { StudentTask } from '../../Models/studentTasks.model';
 import Course from './Course/Course';
 import { setMessage } from '../../store/messageSlice';
+import './Courses.scss';
 
 const Courses: FC = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
@@ -90,24 +91,54 @@ useEffect(() => {
 
   if (!currentUser) return null;
 
+  // return (
+  //   <div>
+  //     <input
+  //       placeholder="חיפוש משימה..."
+  //       value={search}
+  //       onChange={(e) => setSearch(e.target.value)}
+  //     />
+  //     <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+  //       <option value="new">לא בוצע</option>
+  //       <option value="pending">ממתין לציון</option>
+  //       <option value="done">בוצע</option>
+  //     </select>
+  //     {filtered.map((a) => (
+  //       <Course key={a.id} studentTask={a} status={getStatus(a)}  />
+  //     ))}
+  //     <div ref={bottomRef}></div>
+  //   </div>
+  // );
   return (
-    <div>
+  <div className="courses-page">
+    <div className="courses-header">
+      <h1>המשימות שלי</h1>
+      <p>בחר/י משימה כדי לראות פרטים ולהגיש ביצוע</p>
+    </div>
+
+    <div className="courses-tools">
       <input
         placeholder="חיפוש משימה..."
         value={search}
         onChange={(e) => setSearch(e.target.value)}
       />
+
       <select value={filter} onChange={(e) => setFilter(e.target.value)}>
         <option value="new">לא בוצע</option>
         <option value="pending">ממתין לציון</option>
         <option value="done">בוצע</option>
       </select>
-      {filtered.map((a) => (
-        <Course key={a.id} studentTask={a} status={getStatus(a)}  />
-      ))}
-      <div ref={bottomRef}></div>
     </div>
-  );
+
+    <div className="courses-grid">
+      {filtered.map((a) => (
+        <Course key={a.id} studentTask={a} status={getStatus(a)} />
+      ))}
+    </div>
+
+    <div ref={bottomRef}></div>
+  </div>
+);
 };
 
 export default Courses;

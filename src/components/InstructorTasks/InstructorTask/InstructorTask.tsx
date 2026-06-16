@@ -4,6 +4,7 @@ import type { TeacherTask } from '../../../Models/teacherTask.model';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../../../store/messageSlice';
 import { useUndoAction } from '../../../Hooks/useUndoAction';
+import './InstructorTask.scss';
 
 const allJson = 'http://localhost:3001';
 
@@ -99,57 +100,89 @@ onRemove(task.id!);
     );
   };
 
+  // 
   return (
-    <div>
-      <h3 onClick={handleOpen} style={{ cursor: 'pointer' }}>
-        {task.task_title} - {task.student_name}
-      </h3>
+  <>
+    <div
+      className={`instructor-task-card ${task.score !== null ? 'done' : 'pending'}`}
+      onClick={handleOpen}
+    >
+      <div className="instructor-task-status">
+        {task.score !== null ? 'נבדק' : 'ממתין'}
+      </div>
 
-      {isOpen && taskDetails && (
-        <>
-          <p>משוב תלמיד: {taskDetails.feedback}</p>
-          <p>ציון: {taskDetails.score ?? 'אין עדיין'}</p>
+      <h3>{task.task_title}</h3>
 
-          <input
-            type="number"
-            placeholder="הכנס ציון"
-            value={score ?? ''}
-            onChange={async (e) => {
-              const value = Number(e.target.value);
-              try {
-                await scoreSchema.validate(value);
-                setScore(value);
-                setScoreError('');
-              } catch (err: any) {
-                setScoreError(err.message);
-              }
-            }}
-          />
+      <p>{task.student_name}</p>
+      <span>לחצי לצפייה בהגשה</span>
+    </div>
 
-          {scoreError && <div style={{ color: 'red' }}>{scoreError}</div>}
-
-          <button onClick={giveMark} disabled={!!scoreError || score === null}>
-            שלח ציון
+    {isOpen && taskDetails && (
+      <div className="instructor-modal-overlay" onClick={handleOpen}>
+        <div className="instructor-modal" onClick={(e) => e.stopPropagation()}>
+          <button className="close-modal" onClick={handleOpen}>
+            ×
           </button>
 
-          {/* ✔ UI של Undo */}
-          {showUndo && (
-            <div className="undo-toast">
-              <span>{undoMessage}</span>
+          <h2>{task.task_title}</h2>
 
-              <button onClick={handleUndo}>
-                בטל פעולה
-              </button>
+          <div className="student-name-box">
+            תלמידה: {task.student_name}
+          </div>
 
-              <button onClick={dismissUndo}>
-                סגור
+          <div className="feedback-box">
+            <h4>משוב התלמידה</h4>
+            <p>{taskDetails.feedback}</p>
+          </div>
+
+          <div className="task-info">
+            <span>ציון נוכחי: {taskDetails.score ?? 'אין עדיין'}</span>
+          </div>
+
+          {taskDetails.score === null && (
+            <div className="score-form">
+              <input
+                type="number"
+                placeholder="הכנס ציון"
+                value={score ?? ''}
+                onChange={async (e) => {
+                  const value = Number(e.target.value);
+                  try {
+                    await scoreSchema.validate(value);
+                    setScore(value);
+                    setScoreError('');
+                  } catch (err: any) {
+                    setScoreError(err.message);
+                  }
+                }}
+              />
+
+              {scoreError && <div className="score-error">{scoreError}</div>}
+
+              <button onClick={giveMark} disabled={!!scoreError || score === null}>
+                שלח ציון
               </button>
             </div>
           )}
-        </>
-      )}
-    </div>
-  );
+
+          {taskDetails.score !== null && (
+            <p className="status-message"> המשימה כבר נבדקה</p>
+          )}
+        </div>
+      </div>
+    )}
+
+    {showUndo && (
+      <div className="undo-toast">
+        <span>{undoMessage}</span>
+
+        <button onClick={handleUndo}>בטל פעולה</button>
+
+        <button onClick={dismissUndo}>סגור</button>
+      </div>
+    )}
+  </>
+);
 };
 
 export default InstructorTask;

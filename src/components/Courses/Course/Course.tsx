@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import { setMessage } from '../../../store/messageSlice';
 import { useUndoAction } from '../../../Hooks/useUndoAction';
+import './Course.scss';
 
 const allJson = 'http://localhost:3001';
 
@@ -109,29 +110,100 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
     );
   };
 
-  return (
-    <div>
-      <h3 onClick={handleOpen} style={{ cursor: 'pointer' }}>
-        {studentTask.title}
-      </h3>
+  // return (
+  //   <div>
+  //     <h3 onClick={handleOpen} style={{ cursor: 'pointer' }}>
+  //       {studentTask.title}
+  //     </h3>
 
-      {isOpen && taskDetails && trackingDetails && (
-        <>
-          <p>{taskDetails.description}</p>
-          <p>בוצע: {trackingDetails.completed ? 'כן' : 'לא'}</p>
-          <p>ציון: {trackingDetails.score ?? 'אין עדיין'}</p>
+  //     {isOpen && taskDetails && trackingDetails && (
+  //       <>
+  //         <p>{taskDetails.description}</p>
+  //         <p>בוצע: {trackingDetails.completed ? 'כן' : 'לא'}</p>
+  //         <p>ציון: {trackingDetails.score ?? 'אין עדיין'}</p>
+
+  //         {localStatus === 'new' && (
+  //           <form onSubmit={formik.handleSubmit}>
+  //             <input
+  //               name="feedback"
+  //               placeholder="משוב ופירוט (עד 300 תווים)"
+  //               onChange={formik.handleChange}
+  //               value={formik.values.feedback}
+  //             />
+
+  //             {formik.errors.feedback && (
+  //               <div>{formik.errors.feedback}</div>
+  //             )}
+
+  //             <button type="submit" disabled={!formik.isValid || !formik.dirty}>
+  //               הגשה
+  //             </button>
+  //           </form>
+  //         )
+  //         }
+
+  //         {localStatus === 'pending' && <p>⏳ המשימה ממתינה לבדיקה</p>}
+  //         {localStatus === 'done' && <p>✅ הושלם</p>}
+  //       </>
+  //     )}
+
+  //     {/* ✔ UI של Undo */}
+  //     {showUndo && (
+  //       <div className="undo-toast">
+  //         <span>{undoMessage}</span>
+
+  //         <button onClick={handleUndo}>
+  //           בטל פעולה
+  //         </button>
+
+  //         <button onClick={dismissUndo}>
+  //           סגור
+  //         </button>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
+  return (
+  <>
+    <div className={`course-card ${localStatus}`} onClick={handleOpen}>
+      <div className="course-status">
+        {localStatus === 'new' && 'חדש'}
+        {localStatus === 'pending' && 'ממתין'}
+        {localStatus === 'done' && 'בוצע'}
+      </div>
+
+      <h3>{studentTask.title}</h3>
+
+      <p>לחץ/י לצפייה בפרטי המשימה</p>
+    </div>
+
+    {isOpen && taskDetails && trackingDetails && (
+      <div className="task-modal-overlay" onClick={handleOpen}>
+        <div className="task-modal" onClick={(e) => e.stopPropagation()}>
+          <button className="close-modal" onClick={handleOpen}>
+            ×
+          </button>
+
+          <h2>{studentTask.title}</h2>
+
+          <p className="task-description">{taskDetails.description}</p>
+
+          <div className="task-info">
+            <span>בוצע: {trackingDetails.completed ? 'כן' : 'לא'}</span>
+            <span>ציון: {trackingDetails.score ?? 'אין עדיין'}</span>
+          </div>
 
           {localStatus === 'new' && (
-            <form onSubmit={formik.handleSubmit}>
+            <form onSubmit={formik.handleSubmit} className="task-form">
               <input
                 name="feedback"
-                placeholder="משוב ופירוט (עד 300 תווים)"
+                placeholder="משוב ופירוט עד 300 תווים"
                 onChange={formik.handleChange}
                 value={formik.values.feedback}
               />
 
               {formik.errors.feedback && (
-                <div>{formik.errors.feedback}</div>
+                <div className="form-error">{formik.errors.feedback}</div>
               )}
 
               <button type="submit" disabled={!formik.isValid || !formik.dirty}>
@@ -140,27 +212,28 @@ const Course: FC<CourseProps> = ({ studentTask, status }) => {
             </form>
           )}
 
-          {localStatus === 'pending' && <p>⏳ המשימה ממתינה לבדיקה</p>}
-          {localStatus === 'done' && <p>✅ הושלם</p>}
-        </>
-      )}
+          {localStatus === 'pending' && (
+            <p className="status-message"> המשימה ממתינה לבדיקה</p>
+          )}
 
-      {/* ✔ UI של Undo */}
-      {showUndo && (
-        <div className="undo-toast">
-          <span>{undoMessage}</span>
-
-          <button onClick={handleUndo}>
-            בטל פעולה
-          </button>
-
-          <button onClick={dismissUndo}>
-            סגור
-          </button>
+          {localStatus === 'done' && (
+            <p className="status-message"> המשימה הושלמה</p>
+          )}
         </div>
-      )}
-    </div>
-  );
+      </div>
+    )}
+
+    {showUndo && (
+      <div className="undo-toast">
+        <span>{undoMessage}</span>
+
+        <button onClick={handleUndo}>בטל פעולה</button>
+
+        <button onClick={dismissUndo}>סגור</button>
+      </div>
+    )}
+  </>
+);
 };
 
 export default Course;

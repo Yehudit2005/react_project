@@ -1,0 +1,269 @@
+.instructor-task-card {
+  position: relative;
+  width: 320px;
+  height: 210px;
+  padding: 28px 30px;
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(245, 248, 252, 0.9));
+  box-shadow:
+    0 18px 45px rgba(18, 53, 91, 0.16),
+    inset 0 0 0 1px rgba(18, 53, 91, 0.08);
+  cursor: pointer;
+  overflow: hidden;
+  transition: 0.35s ease;
+  clip-path: polygon(0 0, 94% 0, 100% 82%, 8% 100%);
+}
+
+.instructor-task-card::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  top: 0;
+  width: 7px;
+  height: 100%;
+  background: linear-gradient(180deg, #b88700, #f0c75e);
+}
+
+.instructor-task-card::after {
+  content: "";
+  position: absolute;
+  left: -40px;
+  bottom: -40px;
+  width: 130px;
+  height: 130px;
+  background: rgba(18, 53, 91, 0.06);
+  border-radius: 50%;
+}
+
+.instructor-task-card:hover {
+  transform: translateY(-9px) scale(1.02);
+  box-shadow:
+    0 28px 65px rgba(18, 53, 91, 0.24),
+    inset 0 0 0 1px rgba(18, 53, 91, 0.12);
+}
+
+.instructor-task-card h3 {
+  color: #0b2545;
+  font-size: 1.35rem;
+  margin: 48px 0 10px;
+  font-weight: 800;
+}
+
+.instructor-task-card p {
+  color: #12355b;
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.instructor-task-card span {
+  color: #60758b;
+  font-size: 0.92rem;
+}
+
+.instructor-task-status {
+  position: absolute;
+  top: 20px;
+  left: 22px;
+  padding: 7px 16px;
+  font-size: 0.85rem;
+  font-weight: 800;
+  background: rgba(255, 193, 7, 0.18);
+  color: #8a6400;
+  border-inline-start: 4px solid #b88700;
+}
+
+.instructor-task-card.done::before {
+  background: linear-gradient(180deg, #1f7a3a, #76b98b);
+}
+
+.instructor-task-card.done .instructor-task-status {
+  background: rgba(40, 167, 69, 0.16);
+  color: #1f7a3a;
+  border-inline-start-color: #1f7a3a;
+}
+
+.instructor-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  background: rgba(9, 24, 43, 0.65);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 25px;
+  animation: fadeIn 0.25s ease;
+}
+
+.instructor-modal {
+  position: relative;
+  width: min(680px, 100%);
+  background: rgba(255, 255, 255, 0.94);
+  padding: 45px;
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.28);
+  clip-path: polygon(3% 0, 100% 0, 97% 94%, 0 100%);
+  animation: modalPop 0.35s ease;
+}
+
+.close-modal {
+  position: absolute;
+  top: 18px;
+  left: 22px;
+  border: none;
+  background: transparent;
+  font-size: 2rem;
+  cursor: pointer;
+  color: #12355b;
+}
+
+.instructor-modal h2 {
+  color: #12355b;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.student-name-box {
+  display: inline-block;
+  background: rgba(13, 59, 102, 0.1);
+  color: #0d3b66;
+  padding: 10px 18px;
+  font-weight: 800;
+  margin-bottom: 22px;
+}
+
+.feedback-box {
+  margin-top: 15px;
+  padding: 20px;
+  background: rgba(245, 248, 252, 0.9);
+  border-inline-start: 5px solid #12355b;
+}
+
+.feedback-box h4 {
+  color: #12355b;
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+}
+
+.feedback-box p {
+  color: #34495e;
+  line-height: 1.8;
+  margin: 0;
+}
+
+.task-info {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+  margin: 25px 0;
+}
+
+.task-info span {
+  background: rgba(13, 59, 102, 0.1);
+  padding: 10px 18px;
+  color: #0d3b66;
+  font-weight: 700;
+}
+
+.score-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.score-form input {
+  padding: 14px 16px;
+  border: 1px solid #cbd6e2;
+  outline: none;
+  font-size: 1rem;
+}
+
+.score-form input:focus {
+  border-color: #12355b;
+}
+
+.score-form button {
+  align-self: flex-start;
+  padding: 11px 30px;
+  border: none;
+  background: #12355b;
+  color: white;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.score-form button:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.score-error {
+  color: #b00020;
+  font-size: 0.9rem;
+}
+
+.status-message {
+  margin-top: 25px;
+  font-weight: 700;
+  color: #12355b;
+  font-size: 1.1rem;
+}
+
+.undo-toast {
+  position: fixed;
+  bottom: 25px;
+  left: 25px;
+  z-index: 1000;
+  background: #12355b;
+  color: white;
+  padding: 16px 20px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+}
+
+.undo-toast button {
+  border: none;
+  padding: 7px 12px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalPop {
+  from {
+    opacity: 0;
+    transform: translateY(25px) scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (max-width: 720px) {
+  .instructor-task-card {
+    width: 100%;
+    max-width: 340px;
+    margin: 0 auto;
+  }
+
+  .instructor-modal {
+    padding: 35px 25px;
+  }
+
+  .instructor-modal h2 {
+    font-size: 1.5rem;
+  }
+}

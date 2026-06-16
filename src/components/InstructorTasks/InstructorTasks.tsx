@@ -68,23 +68,67 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
 
   const visible = filtered.slice(0, visibleCount);
 
+  // return (
+  //   <div>
+  //     <select value={filter} onChange={(e) => setFilter(e.target.value)}>
+  //       <option value="pending">ממתין לבדיקה</option>
+  //       <option value="done">נבדק</option>
+  //     </select>
+  //     <input
+  //       placeholder="חיפוש לפי כותרת משימה..."
+  //       value={searchTask}
+  //       onChange={(e) => setSearchTask(e.target.value)}
+  //     />
+  //     <input
+  //       placeholder="חיפוש לפי שם תלמיד..."
+  //       value={searchStudent}
+  //       onChange={(e) => setSearchStudent(e.target.value)}
+  //     />
+
+  //     {visible.map((t) => (
+  //       <InstructorTask
+  //         key={t.id}
+  //         task={t}
+  //         onRemove={removeTask}
+  //       />
+  //     ))}
+
+  //     <div ref={bottomRef}></div>
+
+  //     {visibleCount < filtered.length && (
+  //       <button onClick={() => setVisibleCount(prev => prev + 20)}>
+  //         טען עוד ({filtered.length - visibleCount} נותרו)
+  //       </button>
+  //     )}
+  //   </div>
+  // );
   return (
-    <div>
+  <div className="instructor-tasks-page">
+    <div className="instructor-tasks-header">
+      <h1>משימות לבדיקה</h1>
+      <p>צפה/י בהגשות תלמידים, בדוק/בדקי משובים והזן/י ציונים</p>
+    </div>
+
+    <div className="instructor-tools">
       <select value={filter} onChange={(e) => setFilter(e.target.value)}>
         <option value="pending">ממתין לבדיקה</option>
         <option value="done">נבדק</option>
       </select>
+
       <input
         placeholder="חיפוש לפי כותרת משימה..."
         value={searchTask}
         onChange={(e) => setSearchTask(e.target.value)}
       />
+
       <input
         placeholder="חיפוש לפי שם תלמיד..."
         value={searchStudent}
         onChange={(e) => setSearchStudent(e.target.value)}
       />
+    </div>
 
+    <div className="instructor-tasks-grid">
       {visible.map((t) => (
         <InstructorTask
           key={t.id}
@@ -92,16 +136,20 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
           onRemove={removeTask}
         />
       ))}
-
-      <div ref={bottomRef}></div>
-
-      {visibleCount < filtered.length && (
-        <button onClick={() => setVisibleCount(prev => prev + 20)}>
-          טען עוד ({filtered.length - visibleCount} נותרו)
-        </button>
-      )}
     </div>
-  );
+
+    <div ref={bottomRef}></div>
+
+    {visibleCount < filtered.length && (
+      <button
+        className="load-more-btn"
+        onClick={() => setVisibleCount((prev) => prev + 20)}
+      >
+        טען עוד ({filtered.length - visibleCount} נותרו)
+      </button>
+    )}
+  </div>
+);
 };
 
 export default InstructorTasks;

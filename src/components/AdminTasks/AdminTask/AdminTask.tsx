@@ -9,18 +9,20 @@ interface AdminTaskProps {
 }
 
 const AdminTask: FC<AdminTaskProps> = ({ task, instructorName, onDelete }) => (
-  <li className="AdminTask">
-    <div>
-      <span>{task.task_title as any}</span>
-      <span> | מרצה: {instructorName}</span>
-    </div>
+  <div className="admin-task-card">
+    <div className="admin-task-status">ניהול</div>
+
+    <h3>{(task as any).title || task.task_title}</h3>
+
+    <p>מרצה: {instructorName}</p>
+
     <button
-      className="btn btn-danger btn-sm"
+      className="delete-task-btn"
       onClick={() => onDelete(task.id!)}
     >
-      מחק
+      מחק משימה
     </button>
-  </li>
+  </div>
 );
 
 export default AdminTask;

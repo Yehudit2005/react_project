@@ -5,6 +5,7 @@ import type { TeacherTask } from '../../Models/teacherTask.model';
 import type { User } from '../../Models/user.model';
 import './AdminTasks.scss';
 import { useUndoAction } from '../../Hooks/useUndoAction';
+import AdminTask from './AdminTask/AdminTask';
 
 interface AdminTasksProps {}
 
@@ -79,43 +80,78 @@ const AdminTasks: FC<AdminTasksProps> = () => {
     return acc;
   }, {} as Record<string, TeacherTask[]>);
 
+  // return (
+  //   <div className="AdminTasks">
+  //     <h2>כל המשימות</h2>
+
+  //     {Object.entries(grouped).map(([major, tasks]) => (
+  //       <div key={major}>
+  //         <h4>{major}</h4>
+  //         <ul>
+  //           {tasks.map(task => (
+  //             <li key={task.id}>
+  //               <div>
+  //                 <span>{(task as any).title}</span>
+  //                 <span> | מרצה: {getInstructorName(task.instructor_id)}</span>
+  //               </div>
+  //               <button
+  //                 className="btn btn-danger btn-sm"
+  //                 onClick={() => handleDelete(task.id!)}
+  //               >
+  //                 מחק
+  //               </button>
+  //             </li>
+  //           ))}
+  //         </ul>
+  //       </div>
+  //     ))}
+
+  //     <div ref={bottomRef}></div>
+
+  //     {showUndo && (
+  //       <div className="undo-toast">
+  //         <span>{undoMessage}</span>
+  //         <button onClick={handleUndo}>↩ בטל פעולה</button>
+  //         <button onClick={dismissUndo}>✕</button>
+  //       </div>
+  //     )}
+  //   </div>
+  // );
   return (
-    <div className="AdminTasks">
-      <h2>כל המשימות</h2>
-
-      {Object.entries(grouped).map(([major, tasks]) => (
-        <div key={major}>
-          <h4>{major}</h4>
-          <ul>
-            {tasks.map(task => (
-              <li key={task.id}>
-                <div>
-                  <span>{(task as any).title}</span>
-                  <span> | מרצה: {getInstructorName(task.instructor_id)}</span>
-                </div>
-                <button
-                  className="btn btn-danger btn-sm"
-                  onClick={() => handleDelete(task.id!)}
-                >
-                  מחק
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
-      ))}
-
-      <div ref={bottomRef}></div>
-
-      {showUndo && (
-        <div className="undo-toast">
-          <span>{undoMessage}</span>
-          <button onClick={handleUndo}>↩ בטל פעולה</button>
-          <button onClick={dismissUndo}>✕</button>
-        </div>
-      )}
+  <div className="admin-tasks-page">
+    <div className="admin-tasks-header">
+      <h1>ניהול משימות</h1>
+      <p>צפייה בכל המשימות, חלוקה לפי מגמות ומחיקת משימות קיימות</p>
     </div>
-  );
+
+    {Object.entries(grouped).map(([major, tasks]) => (
+      <section className="admin-major-section" key={major}>
+        <h2>{major}</h2>
+
+        <div className="admin-tasks-grid">
+          {tasks.map((task) => (
+            <AdminTask
+              key={task.id}
+              task={task}
+              instructorName={getInstructorName(task.instructor_id)}
+              onDelete={handleDelete}
+            />
+          ))}
+        </div>
+      </section>
+    ))}
+
+    <div ref={bottomRef}></div>
+
+    {showUndo && (
+      <div className="undo-toast">
+        <span>{undoMessage}</span>
+        <button onClick={handleUndo}>↩ בטל פעולה</button>
+        <button onClick={dismissUndo}>✕</button>
+      </div>
+    )}
+  </div>
+);
 };
 
 export default AdminTasks;
