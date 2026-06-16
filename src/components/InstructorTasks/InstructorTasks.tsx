@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useState, useRef, type FC } from 'react';
 import './InstructorTasks.scss';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
@@ -17,6 +17,7 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
   const [searchStudent, setSearchStudent] = useState('');
   const [filter, setFilter] = useState('pending');
   const [visibleCount, setVisibleCount] = useState(20);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   const fetchTasks = async () => {
     if (!currentUser) return;
@@ -32,6 +33,16 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
   useEffect(() => {
     fetchTasks();
   }, [currentUser, searchTask, searchStudent]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setVisibleCount(prev => prev + 20);
+      }
+    }, { threshold: 0, rootMargin: '100px' });
+    if (bottomRef.current) observer.observe(bottomRef.current);
+    return () => observer.disconnect();
+  }, []);
 
   const filtered = tasks.filter(t =>
     filter === 'done' ? t.score !== null : t.score === null
@@ -70,11 +81,7 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
         <InstructorTask key={t.id} task={t} onRefresh={fetchTasks} />
       ))}
 
-      {visibleCount < filtered.length && (
-        <button onClick={() => setVisibleCount(prev => prev + 20)}>
-          טען עוד ({filtered.length - visibleCount} נותרו)
-        </button>
-      )}
+      <div ref={bottomRef}></div>
     </div>
   );
 };

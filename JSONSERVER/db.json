@@ -1435,15 +1435,6 @@
   ],
   "assignments": [
     {
-      "task_number": 4,
-      "major_id": 1,
-      "major_name": "סיעוד",
-      "instructor_id": 2,
-      "title": "ניהול תיק מטופל",
-      "description": "עליך לכתוב כיצד מנהלים תיק מטופל דיגיטלי בצורה מדויקת ובטוחה.",
-      "id": "104"
-    },
-    {
       "task_number": 5,
       "major_id": 1,
       "major_name": "סיעוד",
@@ -13675,20 +13666,19 @@
       "id": "NEcT68KFy6c"
     }
   ],
-"admins": [
-  {
-    "id": "1",
-    "first_name": "מנהל",
-    "last_name": "ראשי",
-    "email": "admin@college.ac.il",
-    "password": "Admin1!23",
-    "address": {
-      "city": "פתח תקווה",
-      "street": "שדרות",
-      "number": 136
+  "admins": [
+    {
+      "id": "1",
+      "first_name": "מנהל",
+      "last_name": "ראשי",
+      "email": "admin@college.ac.il",
+      "password": "Admin1!23",
+      "address": {
+        "city": "פתח תקווה",
+        "street": "שדרות",
+        "number": 136
+      }
     }
-  }
-]
-,
+  ],
   "$schema": "./node_modules/json-server/schema.json"
 }

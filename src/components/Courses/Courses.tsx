@@ -1,4 +1,4 @@
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useState, useRef, type FC } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
 import type { StudentTask } from '../../Models/studentTasks.model';
@@ -7,11 +7,14 @@ import { setMessage } from '../../store/messageSlice';
 
 const Courses: FC = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const majorId = currentUser && 'major_id' in currentUser ? currentUser.major_id : null;
   const dispatch = useDispatch();
   const [assignments, setAssignments] = useState<StudentTask[]>([]);
   const [pendingReviews, setPendingReviews] = useState<any[]>([]);
   const [search, setSearch] = useState('');
   const [filter, setFilter] = useState('new');
+  const [visibleCount, setVisibleCount] = useState(5);
+  const bottomRef = useRef<HTMLDivElement>(null);
   const allJson = 'http://localhost:3001';
 
   const fetchTasks = async () => {
@@ -26,8 +29,8 @@ const Courses: FC = () => {
     }
 
     const assignmentsUrl = search
-      ? `${allJson}/assignments?major_id=${currentUser.major_id}&title_like=${search}`
-      : `${allJson}/assignments?major_id=${currentUser.major_id}`;
+      ? `${allJson}/assignments?major_id=${majorId}&title_like=${search}`
+      : `${allJson}/assignments?major_id=${majorId}`;
 
     const assignmentsRes = await fetch(assignmentsUrl);
     const majorAssignments: any[] = await assignmentsRes.json();
@@ -53,19 +56,31 @@ const Courses: FC = () => {
     }).filter((a) => a.title);
 
     setAssignments(combined);
+    setVisibleCount(20);
   };
 
   useEffect(() => {
     fetchTasks();
   }, [currentUser, search]);
 
+useEffect(() => {
+  const observer = new IntersectionObserver((entries) => {
+    console.log('isIntersecting:', entries[0].isIntersecting);
+    if (entries[0].isIntersecting) {
+      setVisibleCount(prev => prev + 5);
+    }
+  }, { threshold: 0, rootMargin: '100px' });
+  if (bottomRef.current) observer.observe(bottomRef.current);
+  return () => observer.disconnect();
+}, []);
   const getStatus = (a: any): 'new' | 'pending' | 'done' => {
     return a.computedStatus ?? 'new';
   };
 
   const filtered = assignments
     .filter((a) => a.title.includes(search))
-    .filter((a) => getStatus(a) === filter);
+    .filter((a) => getStatus(a) === filter)
+    .slice(0, visibleCount);
 
   useEffect(() => {
     if (filtered.length === 0 && assignments.length > 0) {
@@ -90,6 +105,7 @@ const Courses: FC = () => {
       {filtered.map((a) => (
         <Course key={a.id} studentTask={a} status={getStatus(a)} onRefresh={fetchTasks} />
       ))}
+      <div ref={bottomRef}></div>
     </div>
   );
 };

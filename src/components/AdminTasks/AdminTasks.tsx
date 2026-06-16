@@ -1,9 +1,8 @@
-import { useEffect, useState, type FC } from 'react';
+import { useEffect, useState, useRef, type FC } from 'react';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../../store/messageSlice';
 import type { TeacherTask } from '../../Models/teacherTask.model';
-// import type { TeacherTask } from '../../Models/teacherTask.model';
-import type {User} from '../../Models/user.model'
+import type { User } from '../../Models/user.model';
 import './AdminTasks.scss';
 
 interface AdminTasksProps {}
@@ -13,6 +12,8 @@ const AdminTasks: FC<AdminTasksProps> = () => {
   const dispatch = useDispatch();
   const [assignments, setAssignments] = useState<TeacherTask[]>([]);
   const [instructors, setInstructors] = useState<User[]>([]);
+  const [visibleCount, setVisibleCount] = useState(20);
+  const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,6 +27,16 @@ const AdminTasks: FC<AdminTasksProps> = () => {
     fetchData();
   }, []);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        setVisibleCount(prev => prev + 20);
+      }
+    });
+    if (bottomRef.current) observer.observe(bottomRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   const handleDelete = async (id: number) => {
     await fetch(`${allJson}/assignments/${id}`, { method: 'DELETE' });
     setAssignments(prev => prev.filter(a => a.id !== id));
@@ -37,7 +48,7 @@ const AdminTasks: FC<AdminTasksProps> = () => {
     return inst ? `${inst.first_name} ${inst.last_name}` : 'לא ידוע';
   };
 
-  const grouped = assignments.reduce((acc, task) => {
+  const grouped = assignments.slice(0, visibleCount).reduce((acc, task) => {
     if (!acc[task.major_name]) acc[task.major_name] = [];
     acc[task.major_name].push(task);
     return acc;
@@ -47,14 +58,14 @@ const AdminTasks: FC<AdminTasksProps> = () => {
     <div className="AdminTasks">
       <h2>כל המשימות</h2>
       {Object.entries(grouped).map(([major, tasks]) => (
-        <div key={major} className="">
-          <h4 >{major}</h4>
-          <ul >
+        <div key={major}>
+          <h4>{major}</h4>
+          <ul>
             {tasks.map(task => (
-              <li key={task.id} >
+              <li key={task.id}>
                 <div>
-       <span>{(task as any).title}</span>
-                  <span > | מרצה: {getInstructorName(task.instructor_id)}</span>
+                  <span>{(task as any).title}</span>
+                  <span> | מרצה: {getInstructorName(task.instructor_id)}</span>
                 </div>
                 <button
                   className="btn btn-danger btn-sm"
@@ -67,6 +78,7 @@ const AdminTasks: FC<AdminTasksProps> = () => {
           </ul>
         </div>
       ))}
+      <div ref={bottomRef}></div>
     </div>
   );
 };
