@@ -1,16 +1,26 @@
 import type { FC } from 'react';
 import './Profile.scss';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../store/store';
 import { useFormik } from 'formik';
 import * as yup from 'yup';
-
-interface ProfileProps {}
-
+import { setMessage } from '../../store/messageSlice';
+import { useUndoAction } from '../../Hooks/useUndoAction';
+import { useState } from 'react';
 const allJson = 'http://localhost:3001';
 
-const Profile: FC<ProfileProps> = () => {
+const Profile: FC = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
+  const dispatch = useDispatch();
+const [showPassword, setShowPassword] = useState(false);
+  const {
+    triggerWithUndo,
+    showUndo,
+    undoMessage,
+    handleUndo,
+    dismissUndo
+  } = useUndoAction();
+
   if (!currentUser) return null;
 
   const isStudent = currentUser?.user_type_id === 1;
@@ -23,72 +33,115 @@ const Profile: FC<ProfileProps> = () => {
       city: currentUser?.address?.city || '',
       street: currentUser?.address?.street || '',
       number: currentUser?.address?.number || '',
-family_status: isStudent || !isAdmin ? currentUser?.family_status || '' : '',
+      family_status: isStudent ? currentUser?.family_status || '' : '',
     },
+
     validationSchema: yup.object().shape({
       password: yup.string()
         .min(8, 'סיסמא חייבת להכיל לפחות 8 תווים')
-        .matches(/[a-zA-Z]/, 'חייבת להכיל לפחות אות אחת באנגלית')
-        .matches(/[0-9]/, 'חייבת להכיל לפחות ספרה אחת')
-        .matches(/[!@#$%^&*]/, 'חייבת להכיל לפחות תו מיוחד אחד')
+        .matches(/[a-zA-Z]/)
+        .matches(/[0-9]/)
+        .matches(/[!@#$%^&*]/)
         .required('שדה חובה'),
+
       phone: isStudent ? yup.string().required('שדה חובה') : yup.string(),
       city: yup.string().required('שדה חובה'),
       street: yup.string().required('שדה חובה'),
       number: yup.number().required('שדה חובה'),
       family_status: isStudent ? yup.string().required('שדה חובה') : yup.string(),
     }),
+
     onSubmit: async (values) => {
-      const collection = isAdmin ? 'admins' : isStudent ? 'students' : 'instructors';
+      const collection =
+        isAdmin ? 'admins' : isStudent ? 'students' : 'instructors';
 
-      const updatedData: any = {
-        password: values.password,
-        address: {
-          city: values.city,
-          street: values.street,
-          number: Number(values.number),
+      const prevValues = { ...formik.values };
+
+      // ✔ UI אופטימי (formik כבר מחזיק את השינויים אז אין צורך לשנות state נוסף)
+
+      dispatch(setMessage({
+        text: 'הפרטים עודכנו זמנית',
+        type: 'info'
+      }));
+
+      triggerWithUndo(
+        'ניתן לבטל עדכון פרופיל',
+
+        // ✔ Undo
+        () => {
+          formik.setValues(prevValues);
+
+          dispatch(setMessage({
+            text: 'העדכון בוטל',
+            type: 'info'
+          }));
         },
-      };
 
-      if (isStudent) {
-        updatedData.phone = values.phone;
-        updatedData.family_status = values.family_status;
-      }
+        // ✔ Commit לשרת
+        async () => {
+          const updatedData: any = {
+            password: values.password,
+            address: {
+              city: values.city,
+              street: values.street,
+              number: Number(values.number),
+            },
+          };
 
-      await fetch(`${allJson}/${collection}/${currentUser.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(updatedData),
-      });
+          if (isStudent) {
+            updatedData.phone = values.phone;
+            updatedData.family_status = values.family_status;
+          }
 
-      alert('הפרטים עודכנו בהצלחה!');
+          await fetch(`${allJson}/${collection}/${currentUser.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(updatedData),
+          });
+          formik.resetForm({
+            values: values
+          });
+          dispatch(setMessage({
+            text: 'הפרטים נשמרו בהצלחה',
+            type: 'success'
+          }));
+        }
+      );
     }
   });
 
   return (
     <div className="Profile">
-      <h2>פרופיל - {currentUser?.first_name} {currentUser?.last_name}</h2>
+      <h2>
+        פרופיל - {currentUser.first_name} {currentUser.last_name}
+      </h2>
 
       <form onSubmit={formik.handleSubmit}>
-        <input
-          name="password"
-          type="password"
-          placeholder="סיסמא חדשה"
-          onChange={formik.handleChange}
-          value={formik.values.password}
-        />
-        {formik.errors.password && <div>{formik.errors.password}</div>}
+ <div className="password-field">
+  <input
+    name="password"
+    type={showPassword ? 'text' : 'password'}
+    placeholder="סיסמא חדשה"
+    onChange={formik.handleChange}
+    value={formik.values.password}
+  />
+
+  <button
+    type="button"
+    className="toggle-password"
+    onClick={() => setShowPassword(prev => !prev)}
+  >
+    {showPassword ? '🙈' : '👁️'}
+  </button>
+</div>
 
         {isStudent && (
-          <>
-            <input
-              name="phone"
-              placeholder="טלפון"
-              onChange={formik.handleChange}
-              value={formik.values.phone}
-            />
-            {formik.errors.phone && <div>{formik.errors.phone}</div>}
-          </>
+          <input
+            name="phone"
+            placeholder="טלפון"
+            onChange={formik.handleChange}
+            value={formik.values.phone}
+          />
         )}
 
         <input
@@ -97,7 +150,6 @@ family_status: isStudent || !isAdmin ? currentUser?.family_status || '' : '',
           onChange={formik.handleChange}
           value={formik.values.city}
         />
-        {formik.errors.city && <div>{formik.errors.city}</div>}
 
         <input
           name="street"
@@ -105,7 +157,6 @@ family_status: isStudent || !isAdmin ? currentUser?.family_status || '' : '',
           onChange={formik.handleChange}
           value={formik.values.street}
         />
-        {formik.errors.street && <div>{formik.errors.street}</div>}
 
         <input
           name="number"
@@ -114,29 +165,35 @@ family_status: isStudent || !isAdmin ? currentUser?.family_status || '' : '',
           onChange={formik.handleChange}
           value={formik.values.number}
         />
-        {formik.errors.number && <div>{formik.errors.number}</div>}
 
         {isStudent && (
-          <>
-            <select
-              name="family_status"
-              onChange={formik.handleChange}
-              value={formik.values.family_status}
-            >
-              <option value="">בחר מצב משפחתי</option>
-              <option value="רווק/ה">רווק/ה</option>
-              <option value="נשוי/אה">נשוי/אה</option>
-              <option value="גרוש/ה">גרוש/ה</option>
-              <option value="אלמן/ה">אלמן/ה</option>
-            </select>
-            {formik.errors.family_status && <div>{formik.errors.family_status}</div>}
-          </>
+          <select
+            name="family_status"
+            onChange={formik.handleChange}
+            value={formik.values.family_status}
+          >
+            <option value="">בחר מצב משפחתי</option>
+            <option value="רווק/ה">רווק/ה</option>
+            <option value="נשוי/אה">נשוי/אה</option>
+            <option value="גרוש/ה">גרוש/ה</option>
+            <option value="אלמן/ה">אלמן/ה</option>
+          </select>
         )}
 
         <button type="submit" disabled={!formik.isValid || !formik.dirty}>
           עדכן פרטים
         </button>
       </form>
+
+      {/* ✔ Undo UI */}
+      {showUndo && (
+        <div className="undo-toast">
+          <span>{undoMessage}</span>
+
+          <button onClick={handleUndo}>בטל פעולה</button>
+          <button onClick={dismissUndo}>סגור</button>
+        </div>
+      )}
     </div>
   );
 };
