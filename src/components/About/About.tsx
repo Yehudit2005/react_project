@@ -5,7 +5,7 @@ interface TaskProps {}
 
 const About: FC<TaskProps> = () => (
   <div className="About">
-    Task Component
+    About Component
   </div>
 );
 
