@@ -3264,8 +3264,8 @@
       "student_id": 3,
       "task_number": 5,
       "major_id": 5,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 100
     },
     {
       "id": "56",
@@ -13664,6 +13664,17 @@
       "feedback": "לא משהו חבל",
       "score": null,
       "id": "NEcT68KFy6c"
+    },
+    {
+      "instructor_id": 20,
+      "task_number": 2,
+      "major_name": "מתמטיקה",
+      "student_id": 34,
+      "task_title": "נגזרות - כללים בסיסיים",
+      "student_name": "Ella",
+      "feedback": "אשמח להתחשבות",
+      "score": null,
+      "id": "r4ebY9hIxjI"
     }
   ],
   "admins": [
