@@ -106,31 +106,6 @@ const Courses: FC = () => {
   }, [filtered.length]);
 
   if (!currentUser) return null;
-
-  // return (
-  //   <div>
-  //     <input
-  //       placeholder="חיפוש משימה..."
-  //       value={search}
-  //       onChange={(e) => setSearch(e.target.value)}
-  //     />
-  //     <select value={filter} onChange={(e) => setFilter(e.target.value)}>
-  //       <option value="new">לא בוצע</option>
-  //       <option value="pending">ממתין לציון</option>
-  //       <option value="done">בוצע</option>
-  //     </select>
-  //     {filtered.map((a) => (
-  //       <Course
-  //         key={a.id}
-  //         studentTask={a}
-  //         status={getStatus(a)}
-  //         refreshTasks={fetchTasks}
-  //       />
-  //     ))}
-  //     <div ref={bottomRef}></div>
-  //   </div>
-  // );
-
   return (
     <div className="courses-page">
       <div className="courses-header">
