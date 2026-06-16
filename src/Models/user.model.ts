@@ -35,7 +35,23 @@ export interface Instructor {
   major_id: number;
   major_name: string;
   courses: string[];
-  family_status?: string;  
+  family_status?: string;
 }
 
-export type User = Student | Instructor;
+export interface Admin {
+  id: string;
+  user_type_id?: never;
+  first_name: string;
+  last_name: string;
+  email: string;
+  password: string;
+    phone?: string;
+  address?: {
+    city: string;
+    street: string;
+    number: number;
+  };
+}
+
+
+export type User = Student | Instructor | Admin;

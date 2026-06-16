@@ -12,7 +12,10 @@ const allJson = 'http://localhost:3001';
 const Profile: FC<ProfileProps> = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   if (!currentUser) return null;
+
   const isStudent = currentUser?.user_type_id === 1;
+  const isAdmin = !currentUser.user_type_id;
+
   const formik = useFormik({
     initialValues: {
       password: currentUser?.password || '',
@@ -20,7 +23,7 @@ const Profile: FC<ProfileProps> = () => {
       city: currentUser?.address?.city || '',
       street: currentUser?.address?.street || '',
       number: currentUser?.address?.number || '',
-      family_status: currentUser?.family_status || '',
+family_status: isStudent || !isAdmin ? currentUser?.family_status || '' : '',
     },
     validationSchema: yup.object().shape({
       password: yup.string()
@@ -36,7 +39,7 @@ const Profile: FC<ProfileProps> = () => {
       family_status: isStudent ? yup.string().required('שדה חובה') : yup.string(),
     }),
     onSubmit: async (values) => {
-      const collection = isStudent ? 'students' : 'instructors';
+      const collection = isAdmin ? 'admins' : isStudent ? 'students' : 'instructors';
 
       const updatedData: any = {
         password: values.password,

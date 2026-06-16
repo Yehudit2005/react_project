@@ -44,7 +44,8 @@ const NavBar: FC = () => {
         {currentUser ? (
           <>
             <div className="nav-item-primary" onClick={() => nav('/home/profile')}>
-              👤 {isAdmin ? 'מנהל' : currentUser.first_name}
+              👤 {currentUser.first_name}
+
             </div>
             <div className="nav-item-danger" onClick={handleLogout}>יציאה</div>
           </>
