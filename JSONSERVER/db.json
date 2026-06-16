@@ -1444,15 +1444,6 @@
       "id": "105"
     },
     {
-      "task_number": 8,
-      "major_id": 1,
-      "major_name": "סיעוד",
-      "instructor_id": 4,
-      "title": "טיפול בלקוי שמיעה",
-      "description": "עליך לכתוב כיצד מתקשרים ומטפלים ביעילות בחולים עם לקות שמיעה.",
-      "id": "108"
-    },
-    {
       "task_number": 9,
       "major_id": 1,
       "major_name": "סיעוד",
@@ -1460,15 +1451,6 @@
       "title": "הכנת מרשם תרופתי",
       "description": "עליך לכתוב את המרכיבים החיוניים במרשם תרופתי תקין ואת דרכי בדיקתו.",
       "id": "109"
-    },
-    {
-      "task_number": 10,
-      "major_id": 1,
-      "major_name": "סיעוד",
-      "instructor_id": 3,
-      "title": "הדרכת מטופל לאחר ניתוח",
-      "description": "עליך לכתוב תוכנית הדרכה למטופל בשחרור לאחר ניתוח בטן.",
-      "id": "110"
     },
     {
       "task_number": 11,
@@ -1532,15 +1514,6 @@
       "title": "טיפול פליאטיבי",
       "description": "עליך לכתוב את עקרונות הטיפול הפליאטיבי ותפקיד הצוות הסיעודי.",
       "id": "118"
-    },
-    {
-      "task_number": 19,
-      "major_id": 1,
-      "major_name": "סיעוד",
-      "instructor_id": 4,
-      "title": "ניהול כאב",
-      "description": "עליך לכתוב שיטות להערכה וניהול כאב במטופלים מבוגרים.",
-      "id": "119"
     },
     {
       "task_number": 20,
@@ -2495,6 +2468,15 @@
       "instructor_id": 19,
       "title": "מדידת נפח",
       "description": "עליך למדוד נפחים שונים שאתה רואה בקרבתך"
+    },
+    {
+      "id": 528,
+      "task_number": 28,
+      "major_id": 5,
+      "major_name": "מתמטיקה",
+      "instructor_id": 17,
+      "title": "תרגול באלגברה לינארית",
+      "description": "עליך לתרגל את דף המשימות שחולק היום בכיתה, מתרגיל 1 עד תרגיל 16 "
     }
   ],
   "tracking": [
@@ -3238,7 +3220,7 @@
       "task_number": 5,
       "major_id": 5,
       "completed": true,
-      "score": 100
+      "score": 96
     },
     {
       "id": "56",
@@ -3365,8 +3347,8 @@
       "student_id": 3,
       "task_number": 21,
       "major_id": 5,
-      "completed": false,
-      "score": null
+      "completed": true,
+      "score": 66
     },
     {
       "id": "72",
@@ -13547,7 +13529,7 @@
       "task_title": "מטריצות",
       "student_name": "Noam",
       "feedback": "נחמד מאד מאד",
-      "score": null,
+      "score": 96,
       "id": "gTL681P9HCQ"
     },
     {
@@ -13602,7 +13584,7 @@
       "task_title": "חשבון נומרי",
       "student_name": "Noam",
       "feedback": "לא משהו חבל",
-      "score": null,
+      "score": 66,
       "id": "MYm-rEuwv_o"
     },
     {
@@ -13648,6 +13630,28 @@
       "feedback": "קשה בטירוףףף",
       "score": null,
       "id": "MFxmzlg"
+    },
+    {
+      "instructor_id": 19,
+      "task_number": 9,
+      "major_name": "מתמטיקה",
+      "student_id": 3,
+      "task_title": "משוואות דיפרנציאליות",
+      "student_name": "Noam",
+      "feedback": "עשיתי וממש מרגישה שהשתפרתי",
+      "score": null,
+      "id": "zS3n9R0"
+    },
+    {
+      "instructor_id": 18,
+      "task_number": 10,
+      "major_name": "מתמטיקה",
+      "student_id": 3,
+      "task_title": "טופולוגיה",
+      "student_name": "Noam",
+      "feedback": "עשיתי וממש מרגישה שהשתפרתי",
+      "score": null,
+      "id": "NmrYE5V"
     }
   ],
   "admins": [

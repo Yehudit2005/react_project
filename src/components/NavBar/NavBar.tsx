@@ -29,23 +29,24 @@ const NavBar: FC = () => {
   };
 
   return (
-    <nav>
+    <nav className="NavBar">
       <div className="brand" onClick={() => nav('/')}>
         🎓 האקדמיה
       </div>
 
       <div className="nav-items">
         <div className="nav-item" onClick={() => nav('/')}>בית</div>
-        <div className="nav-item" onClick={() => nav('/about')}>About</div>
+        <div className="nav-item" onClick={() => nav('/about')}>אודות</div>
         <div className="nav-item" onClick={handleCoursesClick}>המשימות שלי</div>
+
         {isAdmin && (
           <div className="nav-item" onClick={() => nav('/newTask')}>הוספת משימה</div>
         )}
+
         {currentUser ? (
           <>
             <div className="nav-item-primary" onClick={() => nav('/home/profile')}>
               👤 {currentUser.first_name}
-
             </div>
             <div className="nav-item-danger" onClick={handleLogout}>יציאה</div>
           </>
