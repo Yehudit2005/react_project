@@ -1,0 +1,30 @@
+.undo-toast {
+  position: fixed;
+  bottom: 24px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #333;
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 9999;
+
+  button:first-of-type {
+    color: #90cdf4;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+
+  button:last-of-type {
+    color: #aaa;
+    background: none;
+    border: none;
+    cursor: pointer;
+  }
+}

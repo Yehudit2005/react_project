@@ -13,6 +13,7 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
   const [tasks, setTasks] = useState<TeacherTask[]>([]);
+  const removeTask = (taskId: number) => { setTasks(prev => prev.filter(t => t.id !== taskId));};
   const [searchTask, setSearchTask] = useState('');
   const [searchStudent, setSearchStudent] = useState('');
   const [filter, setFilter] = useState('pending');
@@ -77,11 +78,19 @@ const InstructorTasks: FC<InstructorTasksProps> = () => {
         onChange={(e) => setSearchStudent(e.target.value)}
       />
 
-      {visible.map((t) => (
-        <InstructorTask key={t.id} task={t} onRefresh={fetchTasks} />
-      ))}
-
-      <div ref={bottomRef}></div>
+    {visible.map((t) => (
+  <InstructorTask
+    key={t.id}
+    task={t}
+    onRemove={removeTask}
+  />
+))}
+ <div ref={bottomRef}></div>
+      {visibleCount < filtered.length && (
+        <button onClick={() => setVisibleCount(prev => prev + 20)}>
+          טען עוד ({filtered.length - visibleCount} נותרו)
+        </button>
+      )}
     </div>
   );
 };

@@ -3,25 +3,36 @@ import * as yup from 'yup';
 import type { TeacherTask } from '../../../Models/teacherTask.model';
 import { useDispatch } from 'react-redux';
 import { setMessage } from '../../../store/messageSlice';
+import { useUndoAction } from '../../../Hooks/useUndoAction';
+
+const allJson = 'http://localhost:3001';
 
 interface InstructorTaskProps {
   task: TeacherTask;
-  onRefresh: () => void;
-}
+    onRemove: (id: number) => void;
 
-const allJson = 'http://localhost:3001';
+}
 
 const scoreSchema = yup.number()
   .min(0, 'הציון חייב להיות לפחות 0')
   .max(100, 'הציון לא יכול לעלות על 100')
   .required('שדה חובה');
 
-const InstructorTask: FC<InstructorTaskProps> = ({ task, onRefresh }) => {
-  const dispatch = useDispatch();
+const InstructorTask: FC<InstructorTaskProps> = ({ task, onRemove }) => {
+    const dispatch = useDispatch();
+
   const [isOpen, setIsOpen] = useState(false);
   const [score, setScore] = useState<number | null>(null);
   const [scoreError, setScoreError] = useState('');
   const [taskDetails, setTaskDetails] = useState<any>(null);
+
+  const {
+    triggerWithUndo,
+    showUndo,
+    undoMessage,
+    handleUndo,
+    dismissUndo
+  } = useUndoAction();
 
   const handleOpen = async () => {
     if (!isOpen) {
@@ -33,30 +44,59 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task, onRefresh }) => {
   };
 
   const giveMark = async () => {
-    try {
-      const res = await fetch(
-        `${allJson}/student_assignments?student_id=${task.student_id}&task_number=${task.task_number}`
-      );
-      const data = await res.json();
-      const studentAssignment = data[0];
+    if (score === null) return;
 
-      await fetch(`${allJson}/student_assignments/${studentAssignment.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score: score, completed: true })
-      });
+    const prevScore = taskDetails?.score;
 
-      await fetch(`${allJson}/pending_reviews/${task.id}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ score: score })
-      });
+    // ✔ UI אופטימי
+    setTaskDetails((prev: any) => ({
+      ...prev,
+      score
+    }));
 
-      dispatch(setMessage({ text: 'הציון נשלח בהצלחה!', type: 'success' }));
-      onRefresh();
-    } catch {
-      dispatch(setMessage({ text: 'שגיאה בשליחת הציון', type: 'error' }));
-    }
+    dispatch(setMessage({
+      text: 'הציון עודכן זמנית',
+      type: 'info'
+    }));
+onRemove(task.id!);
+    triggerWithUndo(
+      'ניתן לבטל את מתן הציון',
+
+      // ✔ Undo
+      () => {
+        setTaskDetails((prev: any) => ({
+          ...prev,
+          score: prevScore
+        }));
+
+        dispatch(setMessage({
+          text: 'הפעולה בוטלה',
+          type: 'info'
+        }));
+      },
+
+      // ✔ Commit לשרת אחרי 5 שניות
+      async () => {
+        const res = await fetch(
+          `${allJson}/student_assignments?student_id=${task.student_id}&task_number=${task.task_number}`
+        );
+
+        const data = await res.json();
+        const studentAssignment = data[0];
+
+        await fetch(`${allJson}/student_assignments/${studentAssignment.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ score, completed: true })
+        });
+
+        await fetch(`${allJson}/pending_reviews/${task.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ score })
+        });
+      }
+    );
   };
 
   return (
@@ -69,25 +109,43 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task, onRefresh }) => {
         <>
           <p>משוב תלמיד: {taskDetails.feedback}</p>
           <p>ציון: {taskDetails.score ?? 'אין עדיין'}</p>
-          <form onSubmit={(e) => { e.preventDefault(); giveMark(); }}>
-            <input
-              type="number"
-              placeholder="הכנס ציון"
-              value={score ?? ''}
-              onChange={async (e) => {
-                const value = Number(e.target.value);
-                try {
-                  await scoreSchema.validate(value);
-                  setScore(value);
-                  setScoreError('');
-                } catch (err: any) {
-                  setScoreError(err.message);
-                }
-              }}
-            />
-            {scoreError && <div style={{ color: 'red' }}>{scoreError}</div>}
-            <button type="submit">שלח ציון</button>
-          </form>
+
+          <input
+            type="number"
+            placeholder="הכנס ציון"
+            value={score ?? ''}
+            onChange={async (e) => {
+              const value = Number(e.target.value);
+              try {
+                await scoreSchema.validate(value);
+                setScore(value);
+                setScoreError('');
+              } catch (err: any) {
+                setScoreError(err.message);
+              }
+            }}
+          />
+
+          {scoreError && <div style={{ color: 'red' }}>{scoreError}</div>}
+
+          <button onClick={giveMark} disabled={!!scoreError || score === null}>
+            שלח ציון
+          </button>
+
+          {/* ✔ UI של Undo */}
+          {showUndo && (
+            <div className="undo-toast">
+              <span>{undoMessage}</span>
+
+              <button onClick={handleUndo}>
+                בטל פעולה
+              </button>
+
+              <button onClick={dismissUndo}>
+                סגור
+              </button>
+            </div>
+          )}
         </>
       )}
     </div>

@@ -6,21 +6,33 @@ import type { TeacherTask } from '../../../Models/teacherTask.model';
 import { useSelector, useDispatch } from 'react-redux';
 import type { RootState } from '../../../store/store';
 import { setMessage } from '../../../store/messageSlice';
+import { useUndoAction } from '../../../Hooks/useUndoAction';
 
 const allJson = 'http://localhost:3001';
 
 interface CourseProps {
   studentTask: StudentTask;
   status: 'new' | 'pending' | 'done';
-  onRefresh: () => void; // ← חסר
 }
 
-const Course: FC<CourseProps> = ({ studentTask, status, onRefresh }) => { // ← חסר
+const Course: FC<CourseProps> = ({ studentTask, status }) => {
   const currentUser = useSelector((state: RootState) => state.user.currentUser);
   const dispatch = useDispatch();
+
+  // ✔ Undo hook
+  const {
+    triggerWithUndo,
+    showUndo,
+    undoMessage,
+    handleUndo,
+    dismissUndo
+  } = useUndoAction();
+
   const [isOpen, setIsOpen] = useState(false);
   const [taskDetails, setTaskDetails] = useState<any>(null);
   const [trackingDetails, setTrackingDetails] = useState<any>(null);
+
+  const [localStatus, setLocalStatus] = useState(status);
 
   const formik = useFormik({
     initialValues: { feedback: '' },
@@ -31,7 +43,7 @@ const Course: FC<CourseProps> = ({ studentTask, status, onRefresh }) => { // ←
         .required('שדה חובה'),
     }),
     onSubmit: async () => {
-      await updateTeacher();
+      await handleSubmit();
     }
   });
 
@@ -52,30 +64,49 @@ const Course: FC<CourseProps> = ({ studentTask, status, onRefresh }) => { // ←
     setIsOpen(!isOpen);
   };
 
-  const updateTeacher = async () => {
-    try {
-      const newTask: TeacherTask = {
-        instructor_id: studentTask.instructor_id,
-        task_number: Number(studentTask.task_number),
-        major_name: studentTask.major_name,
-student_id: Number(currentUser?.id),
-        task_title: studentTask.title,
-        student_name: currentUser?.first_name,
-        feedback: formik.values.feedback,
-        score: null
-      };
+  const handleSubmit = async () => {
+    const prevStatus = localStatus;
 
-      await fetch(`${allJson}/pending_reviews`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newTask)
-      });
+    // ✔ UI מיידי
+    setLocalStatus('pending');
 
-      dispatch(setMessage({ text: 'המשימה נשלחה לבדיקה בהצלחה!', type: 'success' }));
-      onRefresh(); // ← חסר
-    } catch {
-      dispatch(setMessage({ text: 'שגיאה בשליחת המשימה', type: 'error' }));
-    }
+    dispatch(setMessage({
+      text: 'המשימה נשלחה לבדיקה',
+      type: 'info'
+    }));
+
+    triggerWithUndo(
+      'ניתן לבטל שליחה',
+
+      // ✔ Undo
+      () => {
+        setLocalStatus(prevStatus);
+        dispatch(setMessage({
+          text: 'הפעולה בוטלה',
+          type: 'info'
+        }));
+      },
+
+      // ✔ Commit
+      async () => {
+        const newTask: TeacherTask = {
+          instructor_id: studentTask.instructor_id,
+          task_number: Number(studentTask.task_number),
+          major_name: studentTask.major_name,
+          student_id: Number(currentUser?.id),
+          task_title: studentTask.title,
+          student_name: currentUser?.first_name,
+          feedback: formik.values.feedback,
+          score: null
+        };
+
+        await fetch(`${allJson}/pending_reviews`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newTask)
+        });
+      }
+    );
   };
 
   return (
@@ -90,22 +121,43 @@ student_id: Number(currentUser?.id),
           <p>בוצע: {trackingDetails.completed ? 'כן' : 'לא'}</p>
           <p>ציון: {trackingDetails.score ?? 'אין עדיין'}</p>
 
-          {status === 'new' && (
+          {localStatus === 'new' && (
             <form onSubmit={formik.handleSubmit}>
               <input
                 name="feedback"
-                placeholder="משוב ופירוט איך היתה המשימה (עד 300 תווים)"
+                placeholder="משוב ופירוט (עד 300 תווים)"
                 onChange={formik.handleChange}
                 value={formik.values.feedback}
               />
-              {formik.errors.feedback && <div>{formik.errors.feedback}</div>}
-              <button type="submit" disabled={!formik.isValid || !formik.dirty}>הגשה</button>
+
+              {formik.errors.feedback && (
+                <div>{formik.errors.feedback}</div>
+              )}
+
+              <button type="submit" disabled={!formik.isValid || !formik.dirty}>
+                הגשה
+              </button>
             </form>
           )}
 
-          {status === 'pending' && <p>⏳ המשימה ממתינה לבדיקה</p>}
-          {status === 'done' && <p>✅ הושלם</p>}
+          {localStatus === 'pending' && <p>⏳ המשימה ממתינה לבדיקה</p>}
+          {localStatus === 'done' && <p>✅ הושלם</p>}
         </>
+      )}
+
+      {/* ✔ UI של Undo */}
+      {showUndo && (
+        <div className="undo-toast">
+          <span>{undoMessage}</span>
+
+          <button onClick={handleUndo}>
+            בטל פעולה
+          </button>
+
+          <button onClick={dismissUndo}>
+            סגור
+          </button>
+        </div>
       )}
     </div>
   );
