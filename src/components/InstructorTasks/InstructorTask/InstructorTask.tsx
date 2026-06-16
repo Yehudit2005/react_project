@@ -58,7 +58,7 @@ const InstructorTask: FC<InstructorTaskProps> = ({ task, onRemove }) => {
       text: 'הציון עודכן זמנית',
       type: 'info'
     }));
-onRemove(task.id!);
+// onRemove(task.id!);
     triggerWithUndo(
       'ניתן לבטל את מתן הציון',
 
@@ -95,7 +95,8 @@ onRemove(task.id!);
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ score })
         });
-      }
+      onRemove(task.id!);}
+      
     );
   };
 
