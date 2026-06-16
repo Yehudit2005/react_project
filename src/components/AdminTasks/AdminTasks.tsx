@@ -15,7 +15,7 @@ const AdminTasks: FC<AdminTasksProps> = () => {
   const [instructors, setInstructors] = useState<User[]>([]);
 
   const { showUndo, undoMessage, triggerWithUndo, handleUndo, dismissUndo } = useUndoAction();
- const [visibleCount, setVisibleCount] = useState(20);
+  const [visibleCount, setVisibleCount] = useState(20);
   const bottomRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -29,7 +29,8 @@ const AdminTasks: FC<AdminTasksProps> = () => {
     };
     fetchData();
   }, []);
- useEffect(() => {
+
+  useEffect(() => {
     const observer = new IntersectionObserver((entries) => {
       if (entries[0].isIntersecting) {
         setVisibleCount(prev => prev + 20);
@@ -39,60 +40,33 @@ const AdminTasks: FC<AdminTasksProps> = () => {
     return () => observer.disconnect();
   }, []);
 
-  const handleDelete = async (id: number) => {
-    await fetch(`${allJson}/assignments/${id}`, { method: 'DELETE' });
-
   const handleDelete = (id: number) => {
-    
     const deletedTask = assignments.find(a => a.id === id);
     const deletedIndex = assignments.findIndex(a => a.id === id);
 
     if (!deletedTask) return;
 
-    // ✅ מחיקה מה-UI מיידית
     setAssignments(prev => prev.filter(a => a.id !== id));
-    dispatch(setMessage({ text: 'המשימה נמחקה', type: 'success' }));
 
     triggerWithUndo(
       'המשימה נמחקה',
 
-  //     // ✅ onUndo — deletedTask נלכד כאן בדיוק כמו ש-id נלכד במחיקה
-  //     () => {
-  //        console.log("Undo");
-  //       setAssignments(prev => [...prev, deletedTask]);
-  //       dispatch(setMessage({ text: 'הפעולה בוטלה — המשימה שוחזרה', type: 'info' }));
-  //     },
+      // onUndo
+      () => {
+        setAssignments(prev => {
+          const updated = [...prev];
+          updated.splice(deletedIndex, 0, deletedTask);
+          return updated;
+        });
+        dispatch(setMessage({ text: 'הפעולה בוטלה — המשימה שוחזרה', type: 'info' }));
+      },
 
-  //     // ✅ onCommit — 5 שניות עברו: מוחק מה-DB
-  //     async () => {
-  //       await fetch(`${allJson}/assignments/${id}`, { method: 'DELETE' });
-  //     }
-  //   );
-  // };
-   // onUndo
-    () => {
-      setAssignments(prev => {
-        const updated = [...prev];
-        updated.splice(deletedIndex, 0, deletedTask);
-        return updated;
-      });
-
-      dispatch(
-        setMessage({
-          text: 'הפעולה בוטלה — המשימה שוחזרה',
-          type: 'info',
-        })
-      );
-    },
-
-    // onCommit
-    async () => {
-      await fetch(`${allJson}/assignments/${id}`, {
-        method: 'DELETE',
-      });
-    }
-  );
-};
+      // onCommit
+      async () => {
+        await fetch(`${allJson}/assignments/${id}`, { method: 'DELETE' });
+      }
+    );
+  };
 
   const getInstructorName = (id: number) => {
     const inst = instructors.find(i => Number(i.id) === id);
@@ -130,7 +104,8 @@ const AdminTasks: FC<AdminTasksProps> = () => {
           </ul>
         </div>
       ))}
-  <div ref={bottomRef}></div>
+
+      <div ref={bottomRef}></div>
 
       {showUndo && (
         <div className="undo-toast">
